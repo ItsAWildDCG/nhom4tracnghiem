@@ -283,9 +283,12 @@ function selectAnswer(optionIndex){
     buttons[optionIndex].classList.add("selected");
 }
 
+let userAnswers = [];
+
 function nextQuestion(){
   
     const question = currentExam.questions[currentQuestionIndex];
+    userAnswers[currentQuestionIndex] = currentIndex;
     if(currentIndex === question.answer){
         score++;
     }
@@ -306,6 +309,7 @@ function nextQuestion(){
 function finishExam(){
         showResults(score)
         score = 0;
+        userAnswers = [];
         clearInterval(timerInterval);
 }
 
@@ -320,7 +324,7 @@ function generateReview(){
         const userAnswerIndex = userAnswers[i];
         const correctIndex = q.answer;
 
-        const userAnswer = userAnswerIndex !== undefined
+        const userAnswer = userAnswerIndex !== -1
             ? q.options[userAnswerIndex]
             : "No answer";
 
@@ -356,6 +360,7 @@ function showResults(score){
 
     generateReview();
 }
+
 
 
 
