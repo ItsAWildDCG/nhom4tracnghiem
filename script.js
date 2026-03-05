@@ -50,11 +50,10 @@ function handleAuth() {
       alert("Invalid username or password");
       return;
     }
-    document.getElementById("auth-page").classList.toggle("hidden");
     if (user.role === "admin") {
-        document.getElementById("admin-dashboard-page").classList.remove("hidden");
+        showUserDashboard(user.username)
     } else {
-        document.getElementById("user-dashboard-page").classList.remove("hidden");
+        showAdminDashboard(user.username)
     }
 
   } else {
@@ -83,15 +82,25 @@ function handleAuth() {
   }
 }
 
-function showDashboard(username) {
+function showUserDashboard(username) {
 
   document.getElementById("auth-page").classList.add("hidden");
-  document.getElementById("dashboard-page").classList.remove("hidden");
+  document.getElementById("user-dashboard-page").classList.remove("hidden");
 
   document.getElementById("welcome-text").innerText =
     "Welcome, " + username + "!";
 
   loadExams();
+}
+
+function showAdminDashboard(username) {
+
+  document.getElementById("auth-page").classList.add("hidden");
+  document.getElementById("admin-dashboard-page").classList.remove("hidden");
+
+  document.getElementById("welcome-text").innerText =
+    "Welcome, " + username + "!";
+
 }
 
 function logout() {
@@ -306,6 +315,7 @@ function finishExam(){
         score = 0;
         clearInterval(timerInterval);
 }
+
 
 
 
