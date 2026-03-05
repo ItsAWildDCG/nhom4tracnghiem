@@ -175,7 +175,7 @@ button {
 #options{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:10px;
+    gap:30px;
 }
 
 #options button{
@@ -200,5 +200,6 @@ button {
   width: auto;
   padding: 10px 16px;
 }
+
 
 
