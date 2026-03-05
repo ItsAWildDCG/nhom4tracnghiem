@@ -86,11 +86,167 @@ function showDashboard(username) {
 
   document.getElementById("welcome-text").innerText =
     "Welcome, " + username + "!";
+
+  loadExams();
 }
 
 function logout() {
 
   document.getElementById("dashboard-page").classList.add("hidden");
   document.getElementById("auth-page").classList.remove("hidden");
+
+}
+
+const exams = [
+{
+    id: 1,
+    title: "Mathematics Practice Test",
+    subject: "Math",
+    type: "practice",
+    duration: "1 hour",
+    questions: [
+        {
+            question: "5 + 7 = ?",
+            options: ["10","11","12","13"],
+            answer: 2
+        },
+        {
+            question: "9 x 3 = ?",
+            options: ["18","27","21","24"],
+            answer: 1
+        }
+    ]
+},
+
+{
+    id: 2,
+    title: "Computer Science Mid-Term",
+    subject: "CS",
+    type: "midterm",
+    duration: "2 hours",
+    questions: [
+        {
+            question: "What does CPU stand for?",
+            options: [
+                "Central Processing Unit",
+                "Computer Personal Unit",
+                "Central Program Utility",
+                "Core Processing Utility"
+            ],
+            answer: 0
+        },
+        {
+            question: "Which language runs in a browser?",
+            options: ["Python","Java","C++","JavaScript"],
+            answer: 3
+        }
+    ]
+}
+];
+
+function loadExams(){
+
+    const container = document.querySelector(".exam-section");
+
+    exams.forEach(exam => {
+
+        const card = document.createElement("div");
+        card.className = "exam-card";
+
+        card.innerHTML = `
+        <div class="exam-info">
+
+            <div class="tags">
+                <span class="tag">${exam.type}</span>
+            </div>
+
+            <h4>${exam.title}</h4>
+
+            <div class="exam-meta">
+                <span>${exam.duration}</span>
+                <span>${exam.questions.length} questions</span>
+            </div>
+
+        </div>
+
+        <button class="start-btn" onclick="startExam(${exam.id})">
+            Start Exam →
+        </button>
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+function startExam(examId){
+
+    const exam = exams.find(e => e.id === examId);
+
+    if(!exam) return;
+
+    currentExam = exam;
+    currentQuestionIndex = 0;
+
+    document.getElementById("dashboard-page").classList.add("hidden");
+    document.getElementById("exam-page").classList.remove("hidden");
+
+    loadQuestion();
+}
+
+let currentExam = null;
+let currentQuestionIndex = 0;
+
+function loadQuestion(){
+
+    const question = currentExam.questions[currentQuestionIndex];
+
+    document.getElementById("exam-title").innerText = currentExam.title;
+    document.getElementById("question-text").innerText = question.question;
+
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    question.options.forEach((opt,i)=>{
+
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => selectAnswer(i);
+
+        optionsDiv.appendChild(btn);
+
+    });
+
+}
+
+let score = 0;
+
+function selectAnswer(optionIndex){
+
+    const question = currentExam.questions[currentQuestionIndex];
+
+    if(optionIndex === question.answer){
+        score++;
+    }
+
+}
+
+function nextQuestion(){
+
+    currentQuestionIndex++;
+
+    if(currentQuestionIndex >= currentExam.questions.length){
+
+        alert("Exam finished! Score: " + score);
+
+        document.getElementById("exam-page").classList.add("hidden");
+        document.getElementById("dashboard-page").classList.remove("hidden");
+
+        score = 0;
+        return;
+    }
+
+    loadQuestion();
 
 }
