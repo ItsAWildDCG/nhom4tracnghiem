@@ -73,48 +73,139 @@
 <!-- ================= DASHBOARD ================= -->
 <div id="dashboard-page" class="hidden">
 
+  <!-- TOP BAR -->
   <div class="topbar">
+
     <div class="logo">
       <i class="bx bxs-book"></i>
       <div>
         <strong>Online Exam Portal</strong>
-        <span id="welcome-text"></span>
+        <span id="welcome-text">Welcome, user!</span>
       </div>
     </div>
 
     <button class="logout" onclick="logout()">
       <i class="bx bx-log-out"></i> Log Out
     </button>
+
   </div>
+
 
   <div class="content">
 
+    <!-- PAGE TITLE -->
     <h2>Dashboard</h2>
     <p class="subtitle">Browse and access your exams</p>
 
+
+    <!-- STATS -->
     <div class="stats">
 
       <div class="stat red">
         <p>Total Exams</p>
         <h3>10</h3>
+        <i class="bx bx-book"></i>
       </div>
 
       <div class="stat green">
         <p>Free Access</p>
         <h3>5</h3>
+        <i class="bx bx-time"></i>
       </div>
 
       <div class="stat orange">
         <p>Time Sensitive</p>
         <h3>5</h3>
+        <i class="bx bx-alarm"></i>
       </div>
+
+    </div>
+
+
+    <!-- SEARCH BAR -->
+    <div class="search-container">
+
+      <div class="search-bar">
+        <i class="bx bx-search"></i>
+        <input type="text" placeholder="Search exams by name or subject...">
+      </div>
+
+      <button class="filter-btn">
+        <i class="bx bx-filter"></i> Filters
+      </button>
+
+    </div>
+
+
+    <!-- AVAILABLE EXAMS -->
+    <div class="exam-section">
+
+      <h3>Available Exams (10)</h3>
+
+
+      <!-- EXAM CARD -->
+      <div class="exam-card">
+
+        <div class="exam-info">
+
+          <div class="tags">
+            <span class="tag practice">Practice</span>
+            <span class="tag free">Freely Accessible</span>
+          </div>
+
+          <h4>Mathematics Practice Test</h4>
+
+          <div class="exam-meta">
+            <span><i class="bx bx-calendar"></i> Available Now</span>
+            <span><i class="bx bx-time"></i> 1 hour</span>
+            <span><i class="bx bx-list-ul"></i> 30 questions</span>
+          </div>
+
+        </div>
+
+        <button class="start-btn">
+          Start Exam <i class="bx bx-chevron-right"></i>
+        </button>
+
+      </div>
+
+
+      <!-- EXAM CARD -->
+      <div class="exam-card">
+
+        <div class="exam-info">
+
+          <div class="tags">
+            <span class="tag midterm">Mid-Terms</span>
+            <span class="tag timed">Time Sensitive</span>
+          </div>
+
+          <h4>Computer Science Mid-Term</h4>
+
+          <div class="exam-meta">
+            <span><i class="bx bx-calendar"></i> March 1, 2026</span>
+            <span><i class="bx bx-time"></i> 2 hours</span>
+            <span><i class="bx bx-list-ul"></i> 50 questions</span>
+          </div>
+
+          <p class="exam-window">
+            Available: 09:00 AM - 11:00 AM
+          </p>
+
+        </div>
+
+        <button class="start-btn">
+          Start Exam <i class="bx bx-chevron-right"></i>
+        </button>
+
+      </div>
+
 
     </div>
 
   </div>
 
 </div>
-
 <script src="script.js"></script>
 </body>
 </html>
