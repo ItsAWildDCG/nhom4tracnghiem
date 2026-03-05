@@ -106,7 +106,7 @@ const exams = [
     title: "Mathematics Practice Test",
     subject: "Math",
     type: "practice",
-    duration: "60 minutes",
+    duration: 60,
     questions: [
         {
             question: "5 + 7 = ?",
@@ -126,7 +126,7 @@ const exams = [
     title: "Computer Science Mid-Term",
     subject: "CS",
     type: "midterm",
-    duration: "120 minutes",
+    duration: 120,
     questions: [
         {
             question: "What does CPU stand for?",
@@ -166,7 +166,7 @@ function loadExams(){
             <h4>${exam.title}</h4>
 
             <div class="exam-meta">
-                <span>${exam.duration}</span>
+                <span>${exam.duration} minutes</span>
                 <span>${exam.questions.length} questions</span>
             </div>
 
@@ -202,7 +202,7 @@ function startExam(examId){
 
 function startTimer(duration){
 
-    let minutes = parseInt(duration);
+    let minutes = duration;
     timeLeft = minutes * 60;
 
     const timerDisplay = document.getElementById("timer");
@@ -302,6 +302,7 @@ function finishExam(){
 
         score = 0;
 }
+
 
 
 
