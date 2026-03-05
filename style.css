@@ -172,10 +172,16 @@ button {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.answers{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+#options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+#options button{
+    padding:12px;
+    font-size:16px;
+    width:100%;
 }
 
 .tag {
@@ -194,4 +200,5 @@ button {
   width: auto;
   padding: 10px 16px;
 }
+
 
