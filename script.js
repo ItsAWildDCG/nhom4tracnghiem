@@ -304,7 +304,7 @@ function nextQuestion(){
 }
 
 function finishExam(){
-        showResults()
+        showResults(score)
         score = 0;
         clearInterval(timerInterval);
 }
@@ -356,6 +356,7 @@ function showResults(score){
 
     generateReview();
 }
+
 
 
 
