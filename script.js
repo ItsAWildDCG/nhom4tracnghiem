@@ -162,7 +162,9 @@ const exams = [
 
 function loadExams(){
 
-    const container = document.querySelector(".exam-section");
+    const container = document.getElementById("exam-list");
+
+    container.innerHTML = "";
 
     exams.forEach(exam => {
 
@@ -185,10 +187,11 @@ function loadExams(){
 
         </div>
 
-        <button class="start-btn" onclick="startExam(${exam.id})">
-            Start Exam →
-        </button>
+        <button class="start-btn">Start Exam →</button>
         `;
+
+        card.querySelector(".start-btn")
+            .addEventListener("click", () => startExam(exam.id));
 
         container.appendChild(card);
 
@@ -205,7 +208,7 @@ function startExam(examId){
     currentExam = exam;
     currentQuestionIndex = 0;
 
-    document.getElementById("dashboard-page").classList.add("hidden");
+    document.getElementById("user-dashboard-page").classList.add("hidden");
     document.getElementById("exam-page").classList.remove("hidden");
 
     startTimer(currentExam.duration);
@@ -315,6 +318,7 @@ function finishExam(){
         score = 0;
         clearInterval(timerInterval);
 }
+
 
 
 
