@@ -197,6 +197,17 @@ button {
     color: white;
 }
 
+.review-section{
+    margin-top:30px;
+}
+
+.review-item{
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:8px;
+}
+
 .tag {
   padding: 4px 10px;
   border-radius: 20px;
@@ -213,6 +224,7 @@ button {
   width: auto;
   padding: 10px 16px;
 }
+
 
 
 
