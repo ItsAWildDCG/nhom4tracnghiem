@@ -225,6 +225,14 @@ let currentIndex = null;
 
 function selectAnswer(optionIndex){
     currentIndex = optionIndex;
+
+    const buttons = document.querySelectorAll("#options button");
+
+    buttons.forEach(btn => {
+        btn.classList.remove("selected");
+    });
+
+    buttons[index].classList.add("selected");
 }
 
 function nextQuestion(){
@@ -251,4 +259,5 @@ function nextQuestion(){
     loadQuestion();
 
 }
+
 
