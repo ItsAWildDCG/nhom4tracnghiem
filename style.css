@@ -146,6 +146,22 @@ button {
   margin-top: 30px;
 }
 
+.exam-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    background: white;
+}
+
+.exam-info{
+    max-width: 75%;
+}
+
 .exam {
   background: white;
   padding: 20px;
@@ -154,6 +170,12 @@ button {
   display: flex;
   justify-content: space-between;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.answers{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 }
 
 .tag {
@@ -172,3 +194,4 @@ button {
   width: auto;
   padding: 10px 16px;
 }
+
