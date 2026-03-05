@@ -1,58 +1,174 @@
-let isLogin = true;
-
-/* HARDCODED ACCOUNTS */
-const accounts = [
-  { username: "user1", password: "123456", role: "user" },
-  { username: "student", password: "password", role: "user" },
-  { username: "admin", password: "admin123", role: "admin" }
-];
-
-function toggleMode() {
-  isLogin = !isLogin;
-
-  document.getElementById("email-field").classList.toggle("hidden");
-  document.getElementById("confirm-field").classList.toggle("hidden");
-
-  document.getElementById("submit-btn").innerText = isLogin ? "Log In" : "Sign Up";
-  document.getElementById("subtitle").innerText = isLogin
-    ? "Welcome back! Please log in to continue."
-    : "Create an account to get started.";
-
-  document.getElementById("switch-text").innerText = isLogin
-    ? "Don't have an account?"
-    : "Already have an account?";
-
-  document.querySelector(".switch a").innerText = isLogin ? "Sign Up" : "Log In";
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-function togglePassword(icon) {
-  const input = icon.previousElementSibling;
-  input.type = input.type === "password" ? "text" : "password";
+body {
+  margin: 0;
+  background: #faf7f7;
 }
 
-function submitForm() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+/* ===== AUTH ===== */
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 
-  if (isLogin) {
-    const user = accounts.find(
-      acc => acc.username === username && acc.password === password
-    );
+.card {
+  width: 380px;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
 
-    if (!user) {
-      alert("Invalid username or password");
-      return;
-    }
+.header {
+  background: #ff1f2d;
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
 
-    alert(`Login successful!\nRole: ${user.role.toUpperCase()}`);
-  } else {
-    const confirm = document.getElementById("confirm").value;
+.form {
+  padding: 25px;
+}
 
-    if (password !== confirm) {
-      alert("Passwords do not match");
-      return;
-    }
+.input-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+}
 
-    alert("Sign up successful! (not saved permanently)");
-  }
+.input-box input {
+  border: none;
+  outline: none;
+  flex: 1;
+  margin-left: 8px;
+}
+
+button {
+  width: 100%;
+  background: #ff1f2d;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.footer {
+  margin-top: 16px;
+  color: #777;
+}
+
+/* ===== DASHBOARD ===== */
+.hidden {
+  display: none;
+}
+
+.topbar {
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logout {
+  width: auto;
+  padding: 8px 14px;
+}
+
+.content {
+  padding: 30px;
+}
+
+.subtitle {
+  color: #666;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.stat {
+  background: white;
+  flex: 1;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.stat i {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 28px;
+}
+
+.red { border-left: 5px solid #ff1f2d; }
+.green { border-left: 5px solid #22c55e; }
+.orange { border-left: 5px solid #f97316; }
+
+.search {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.search input {
+  flex: 1;
+  border: none;
+  outline: none;
+}
+
+.exam-list {
+  margin-top: 30px;
+}
+
+.exam {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.tag {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-right: 6px;
+}
+
+.tag.blue { background: #e0edff; color: #2563eb; }
+.tag.green { background: #dcfce7; color: #16a34a; }
+.tag.orange { background: #ffedd5; color: #ea580c; }
+.tag.red { background: #fee2e2; color: #dc2626; }
+
+.start {
+  width: auto;
+  padding: 10px 16px;
 }
