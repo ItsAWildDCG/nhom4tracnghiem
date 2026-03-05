@@ -71,7 +71,7 @@
 
 
 <!-- ================= DASHBOARD ================= -->
-<div id="dashboard-page" class="hidden">
+<div id="user-dashboard-page" class="hidden">
 
   <!-- TOP BAR -->
   <div class="topbar">
@@ -148,6 +148,89 @@
 
 </div>
 
+<!-- ================= ADMIN DASHBOARD ================= -->
+<div id="admin-dashboard-page" class="hidden">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+
+    <div class="logo">
+      <i class="bx bxs-book"></i>
+      <div>
+        <strong>Online Exam Portal</strong>
+        <span id="admin-welcome-text">Welcome, Admin!</span>
+      </div>
+    </div>
+
+    <button class="logout" onclick="logout()">
+      <i class="bx bx-log-out"></i> Log Out
+    </button>
+
+  </div>
+
+
+  <div class="content">
+
+    <!-- PAGE TITLE -->
+    <h2>Admin Dashboard</h2>
+    <p class="subtitle">Manage exams and users</p>
+
+
+    <!-- STATS -->
+    <div class="stats">
+
+      <div class="stat red">
+        <p>Total Exams</p>
+        <h3 id="admin-total-exams">0</h3>
+        <i class="bx bx-book"></i>
+      </div>
+
+      <div class="stat green">
+        <p>Total Users</p>
+        <h3 id="admin-total-users">0</h3>
+        <i class="bx bx-user"></i>
+      </div>
+
+      <div class="stat orange">
+        <p>Active Exams</p>
+        <h3 id="admin-active-exams">0</h3>
+        <i class="bx bx-alarm"></i>
+      </div>
+
+    </div>
+
+
+    <!-- ADMIN ACTIONS -->
+    <div class="search-container">
+
+      <button class="filter-btn" onclick="createExam()">
+        <i class="bx bx-plus"></i> Create Exam
+      </button>
+
+      <button class="filter-btn" onclick="manageExams()">
+        <i class="bx bx-edit"></i> Manage Exams
+      </button>
+
+      <button class="filter-btn" onclick="viewUsers()">
+        <i class="bx bx-group"></i> View Users
+      </button>
+
+    </div>
+
+
+    <!-- ADMIN LIST AREA -->
+    <div class="exam-section">
+
+      <h3>System Overview</h3>
+
+      <div id="admin-panel"></div>
+
+    </div>
+
+  </div>
+
+</div>
+  
 <div id="exam-page" class="hidden">
 
 <h2 id="exam-title"></h2>
