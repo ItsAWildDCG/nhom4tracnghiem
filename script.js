@@ -313,11 +313,12 @@ function finishExam(){
     alert("Exam finished! Score: " + score);
 
         document.getElementById("exam-page").classList.add("hidden");
-        document.getElementById("dashboard-page").classList.remove("hidden");
+        document.getElementById("user-dashboard-page").classList.remove("hidden");
 
         score = 0;
         clearInterval(timerInterval);
 }
+
 
 
 
