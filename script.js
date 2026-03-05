@@ -291,12 +291,7 @@ function nextQuestion(){
         score++;
     }
 
-    const buttons = document.querySelectorAll("#options button");
-
-    buttons.forEach(btn => {
-        btn.classList.remove("selected");
-    });
-  
+    currentIndex = -1;
     currentQuestionIndex++;
 
     if(currentQuestionIndex >= currentExam.questions.length){
@@ -318,6 +313,7 @@ function finishExam(){
         score = 0;
         clearInterval(timerInterval);
 }
+
 
 
 
