@@ -106,7 +106,7 @@ const exams = [
     title: "Mathematics Practice Test",
     subject: "Math",
     type: "practice",
-    duration: "1 hour",
+    duration: "60 minutes",
     questions: [
         {
             question: "5 + 7 = ?",
@@ -126,7 +126,7 @@ const exams = [
     title: "Computer Science Mid-Term",
     subject: "CS",
     type: "midterm",
-    duration: "2 hours",
+    duration: "120 minutes",
     questions: [
         {
             question: "What does CPU stand for?",
@@ -302,6 +302,7 @@ function finishExam(){
 
         score = 0;
 }
+
 
 
 
