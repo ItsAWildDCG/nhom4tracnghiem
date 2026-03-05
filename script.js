@@ -97,6 +97,9 @@ function logout() {
 
 }
 
+let timerInterval;
+let timeLeft;
+
 const exams = [
 {
     id: 1,
@@ -192,7 +195,37 @@ function startExam(examId){
     document.getElementById("dashboard-page").classList.add("hidden");
     document.getElementById("exam-page").classList.remove("hidden");
 
+    startTimer(currentExam.duration);
+  
     loadQuestion();
+}
+
+function startTimer(duration){
+
+    let minutes = parseInt(duration);
+    timeLeft = minutes * 60;
+
+    const timerDisplay = document.getElementById("timer");
+
+    timerInterval = setInterval(()=>{
+
+        let min = Math.floor(timeLeft / 60);
+        let sec = timeLeft % 60;
+
+        sec = sec < 10 ? "0" + sec : sec;
+
+        timerDisplay.innerText = `Time Remaining: ${min}:${sec}`;
+
+        timeLeft--;
+
+        if(timeLeft < 0){
+            clearInterval(timerInterval);
+            alert("Time is up!");
+            finishExam();
+            return;
+        }
+
+    },1000);
 }
 
 let currentExam = null;
@@ -246,19 +279,24 @@ function nextQuestion(){
     currentQuestionIndex++;
 
     if(currentQuestionIndex >= currentExam.questions.length){
-
-        alert("Exam finished! Score: " + score);
-
-        document.getElementById("exam-page").classList.add("hidden");
-        document.getElementById("dashboard-page").classList.remove("hidden");
-
-        score = 0;
+        finishExam();
         return;
+        
     }
 
     loadQuestion();
 
 }
+
+function finishExam(){
+    alert("Exam finished! Score: " + score);
+
+        document.getElementById("exam-page").classList.add("hidden");
+        document.getElementById("dashboard-page").classList.remove("hidden");
+
+        score = 0;
+}
+
 
 
 
