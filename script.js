@@ -273,7 +273,7 @@ let currentIndex = -1;
 
 function selectAnswer(optionIndex){
     currentIndex = optionIndex;
-
+    
     const buttons = document.querySelectorAll("#options button");
 
     buttons.forEach(btn => {
@@ -297,6 +297,7 @@ function nextQuestion(){
     currentQuestionIndex++;
 
     if(currentQuestionIndex >= currentExam.questions.length){
+        alert(1);
         finishExam();
         return;
         
@@ -307,6 +308,7 @@ function nextQuestion(){
 }
 
 function finishExam(){
+        alert(2);
         showResults(score)
         score = 0;
         userAnswers = [];
@@ -314,7 +316,7 @@ function finishExam(){
 }
 
 function generateReview(){
-
+    alert(4);
     const container = document.getElementById("review-list");
 
     container.innerHTML = "";
@@ -349,7 +351,7 @@ function generateReview(){
 }
 
 function showResults(score){
-
+    alert(3);
     document.getElementById("quiz-page").classList.add("hidden");
     document.getElementById("result-page").classList.remove("hidden");
 
@@ -360,6 +362,7 @@ function showResults(score){
 
     generateReview();
 }
+
 
 
 
