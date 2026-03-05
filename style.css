@@ -176,6 +176,7 @@ button {
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:30px;
+    margin-bottom: 30px;
 }
 
 #options button{
@@ -185,7 +186,7 @@ button {
 }
 
 #options button.selected {
-    background-color: #E06060;
+    background-color: #E07070;
     color: white;
 }
 
@@ -205,6 +206,7 @@ button {
   width: auto;
   padding: 10px 16px;
 }
+
 
 
 
