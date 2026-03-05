@@ -51,7 +51,11 @@ function handleAuth() {
       return;
     }
 
-    showDashboard(username);
+    if (user.role === "admin") {
+        document.getElementById("admin-dashboard-page").classList.remove("hidden");
+    } else {
+        document.getElementById("user-dashboard-page").classList.remove("hidden");
+    }
 
   } else {
 
@@ -91,8 +95,8 @@ function showDashboard(username) {
 }
 
 function logout() {
-
-  document.getElementById("dashboard-page").classList.add("hidden");
+  document.getElementById("admin-dashboard-page").classList.add("hidden");
+  document.getElementById("user-dashboard-page").classList.add("hidden");
   document.getElementById("auth-page").classList.remove("hidden");
 
 }
@@ -302,6 +306,7 @@ function finishExam(){
         score = 0;
         clearInterval(timerInterval);
 }
+
 
 
 
