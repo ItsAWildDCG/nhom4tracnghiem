@@ -221,19 +221,20 @@ function loadQuestion(){
 }
 
 let score = 0;
+let currentIndex = null;
 
 function selectAnswer(optionIndex){
-
-    const question = currentExam.questions[currentQuestionIndex];
-
-    if(optionIndex === question.answer){
-        score++;
-    }
-
+    currentIndex = optionIndex;
 }
 
 function nextQuestion(){
+  
+    const question = currentExam.questions[currentQuestionIndex];
 
+    if(currentIndex === question.answer){
+        score++;
+    }
+  
     currentQuestionIndex++;
 
     if(currentQuestionIndex >= currentExam.questions.length){
@@ -250,3 +251,4 @@ function nextQuestion(){
     loadQuestion();
 
 }
+
