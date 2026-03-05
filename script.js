@@ -232,7 +232,7 @@ function selectAnswer(optionIndex){
         btn.classList.remove("selected");
     });
 
-    buttons[index].classList.add("selected");
+    buttons[optionIndex].classList.add("selected");
 }
 
 function nextQuestion(){
@@ -259,5 +259,6 @@ function nextQuestion(){
     loadQuestion();
 
 }
+
 
 
