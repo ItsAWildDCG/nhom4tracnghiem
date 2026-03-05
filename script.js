@@ -50,7 +50,7 @@ function handleAuth() {
       alert("Invalid username or password");
       return;
     }
-
+    document.getElementById("auth-page").classList.toggle("hidden");
     if (user.role === "admin") {
         document.getElementById("admin-dashboard-page").classList.remove("hidden");
     } else {
@@ -306,6 +306,7 @@ function finishExam(){
         score = 0;
         clearInterval(timerInterval);
 }
+
 
 
 
