@@ -219,7 +219,6 @@ function startTimer(duration){
         timeLeft--;
 
         if(timeLeft < 0){
-            clearInterval(timerInterval);
             alert("Time is up!");
             finishExam();
             return;
@@ -301,7 +300,9 @@ function finishExam(){
         document.getElementById("dashboard-page").classList.remove("hidden");
 
         score = 0;
+        clearInterval(timerInterval);
 }
+
 
 
 
