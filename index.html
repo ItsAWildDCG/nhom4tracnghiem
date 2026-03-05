@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Online Exam Portal</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Online Exam Portal</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
+
 <body>
 
-<!-- ================= LOGIN / SIGNUP ================= -->
+<!-- ================= AUTH PAGE ================= -->
 <div id="auth-page" class="auth-container">
 
   <div class="card">
+
     <div class="header">
       <h1>Online Exam Portal</h1>
-      <p id="subtitle">Welcome back! Please log in to continue.</p>
+      <p id="auth-subtitle">Welcome back! Please log in to continue.</p>
     </div>
 
     <div class="form">
+
+      <!-- USERNAME -->
       <label>Username</label>
       <div class="input-box">
         <i class="bx bx-user"></i>
         <input id="username" type="text" placeholder="Enter your username">
       </div>
 
+      <!-- EMAIL (signup only) -->
+      <div id="email-field" class="hidden">
+        <label>Email</label>
+        <div class="input-box">
+          <i class="bx bx-envelope"></i>
+          <input id="email" type="email" placeholder="Enter your email">
+        </div>
+      </div>
+
+      <!-- PASSWORD -->
       <label>Password</label>
       <div class="input-box">
         <i class="bx bx-lock"></i>
@@ -31,89 +45,74 @@
         <i class="bx bx-show toggle" onclick="togglePassword(this)"></i>
       </div>
 
-      <button onclick="login()">Log In</button>
+      <!-- CONFIRM PASSWORD (signup only) -->
+      <div id="confirm-field" class="hidden">
+        <label>Confirm Password</label>
+        <div class="input-box">
+          <i class="bx bx-lock"></i>
+          <input id="confirm-password" type="password" placeholder="Confirm password">
+        </div>
+      </div>
+
+      <button id="auth-button" onclick="handleAuth()">Log In</button>
+
+      <p class="switch">
+        <span id="switch-text">Don't have an account?</span>
+        <a onclick="toggleMode()" id="switch-link">Sign Up</a>
+      </p>
+
     </div>
+
   </div>
 
   <p class="footer">Secure authentication for online examinations</p>
+
 </div>
 
-<!-- ================= USER DASHBOARD ================= -->
+
+<!-- ================= DASHBOARD ================= -->
 <div id="dashboard-page" class="hidden">
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <div class="logo">
       <i class="bx bxs-book"></i>
       <div>
         <strong>Online Exam Portal</strong>
-        <span id="welcome-text">Welcome</span>
+        <span id="welcome-text"></span>
       </div>
     </div>
+
     <button class="logout" onclick="logout()">
       <i class="bx bx-log-out"></i> Log Out
     </button>
   </div>
 
-  <!-- CONTENT -->
   <div class="content">
 
     <h2>Dashboard</h2>
     <p class="subtitle">Browse and access your exams</p>
 
-    <!-- STATS -->
     <div class="stats">
+
       <div class="stat red">
         <p>Total Exams</p>
         <h3>10</h3>
-        <i class="bx bxs-book"></i>
       </div>
+
       <div class="stat green">
         <p>Free Access</p>
         <h3>5</h3>
-        <i class="bx bxs-time"></i>
       </div>
+
       <div class="stat orange">
         <p>Time Sensitive</p>
         <h3>5</h3>
-        <i class="bx bxs-alarm"></i>
-      </div>
-    </div>
-
-    <!-- SEARCH -->
-    <div class="search">
-      <i class="bx bx-search"></i>
-      <input type="text" placeholder="Search exams by name or subject...">
-      <button><i class="bx bx-filter"></i> Filters</button>
-    </div>
-
-    <!-- EXAMS -->
-    <div class="exam-list">
-      <h3>Available Exams (10)</h3>
-
-      <div class="exam">
-        <div>
-          <span class="tag blue">Practice</span>
-          <span class="tag green">Freely Accessible</span>
-          <h4>Mathematics Practice Test</h4>
-          <p><i class="bx bx-time"></i> 1 hour &nbsp; <i class="bx bx-list-ul"></i> 30 questions</p>
-        </div>
-        <button class="start">Start Exam</button>
-      </div>
-
-      <div class="exam">
-        <div>
-          <span class="tag orange">Mid-Term</span>
-          <span class="tag red">Time Sensitive</span>
-          <h4>Computer Science Mid-Term</h4>
-          <p><i class="bx bx-calendar"></i> March 1, 2026</p>
-          <p class="time">Available: 09:00 AM - 11:00 AM</p>
-        </div>
-        <button class="start">Start Exam</button>
       </div>
 
     </div>
+
   </div>
+
 </div>
 
 <script src="script.js"></script>
