@@ -269,7 +269,7 @@ function loadQuestion(){
 }
 
 let score = 0;
-let currentIndex = null;
+let currentIndex = -1;
 
 function selectAnswer(optionIndex){
     currentIndex = optionIndex;
@@ -286,7 +286,7 @@ function selectAnswer(optionIndex){
 function nextQuestion(){
   
     const question = currentExam.questions[currentQuestionIndex];
-
+    alert(currentIndex + " " + question.answer);
     if(currentIndex === question.answer){
         score++;
     }
@@ -313,6 +313,7 @@ function finishExam(){
         score = 0;
         clearInterval(timerInterval);
 }
+
 
 
 
