@@ -295,7 +295,7 @@ function nextQuestion(){
 
     currentIndex = -1;
     currentQuestionIndex++;
-
+    alert(currentQuestionIndex);
     if(currentQuestionIndex >= currentExam.questions.length){
         alert(1);
         finishExam();
@@ -362,6 +362,7 @@ function showResults(score){
 
     generateReview();
 }
+
 
 
 
