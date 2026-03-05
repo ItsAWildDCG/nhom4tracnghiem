@@ -286,7 +286,6 @@ function selectAnswer(optionIndex){
 function nextQuestion(){
   
     const question = currentExam.questions[currentQuestionIndex];
-    alert(currentIndex + " " + question.answer);
     if(currentIndex === question.answer){
         score++;
     }
@@ -305,11 +304,7 @@ function nextQuestion(){
 }
 
 function finishExam(){
-    alert("Exam finished! Score: " + score);
-
-        document.getElementById("exam-page").classList.add("hidden");
-        document.getElementById("user-dashboard-page").classList.remove("hidden");
-
+        showResults()
         score = 0;
         clearInterval(timerInterval);
 }
@@ -361,6 +356,7 @@ function showResults(score){
 
     generateReview();
 }
+
 
 
 
