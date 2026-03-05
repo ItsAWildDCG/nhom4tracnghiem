@@ -314,8 +314,53 @@ function finishExam(){
         clearInterval(timerInterval);
 }
 
+function generateReview(){
 
+    const container = document.getElementById("review-list");
 
+    container.innerHTML = "";
+
+    currentExam.questions.forEach((q, i) => {
+
+        const userAnswerIndex = userAnswers[i];
+        const correctIndex = q.answer;
+
+        const userAnswer = userAnswerIndex !== undefined
+            ? q.options[userAnswerIndex]
+            : "No answer";
+
+        const correctAnswer = q.options[correctIndex];
+
+        const item = document.createElement("div");
+        item.className = "review-item";
+
+        item.innerHTML = `
+            <h4>Question ${i+1}</h4>
+            <p>${q.question}</p>
+
+            <p><strong>You answered:</strong> ${userAnswer}</p>
+
+            <p><strong>Correct answer:</strong> ${correctAnswer}</p>
+        `;
+
+        container.appendChild(item);
+
+    });
+
+}
+
+function showResults(score){
+
+    document.getElementById("quiz-page").classList.add("hidden");
+    document.getElementById("result-page").classList.remove("hidden");
+
+    document.getElementById("result-title").innerText = currentExam.title;
+
+    document.getElementById("score-text").innerText =
+        `${score} / ${currentExam.questions.length}`;
+
+    generateReview();
+}
 
 
 
