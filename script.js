@@ -51,9 +51,9 @@ function handleAuth() {
       return;
     }
     if (user.role === "admin") {
-        showUserDashboard(user.username)
-    } else {
         showAdminDashboard(user.username)
+    } else {
+        showUserDashboard(user.username)
     }
 
   } else {
@@ -315,6 +315,7 @@ function finishExam(){
         score = 0;
         clearInterval(timerInterval);
 }
+
 
 
 
