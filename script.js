@@ -1,112 +1,58 @@
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+let isLogin = true;
+
+/* HARDCODED ACCOUNTS */
+const accounts = [
+  { username: "user1", password: "123456", role: "user" },
+  { username: "student", password: "password", role: "user" },
+  { username: "admin", password: "admin123", role: "admin" }
+];
+
+function toggleMode() {
+  isLogin = !isLogin;
+
+  document.getElementById("email-field").classList.toggle("hidden");
+  document.getElementById("confirm-field").classList.toggle("hidden");
+
+  document.getElementById("submit-btn").innerText = isLogin ? "Log In" : "Sign Up";
+  document.getElementById("subtitle").innerText = isLogin
+    ? "Welcome back! Please log in to continue."
+    : "Create an account to get started.";
+
+  document.getElementById("switch-text").innerText = isLogin
+    ? "Don't have an account?"
+    : "Already have an account?";
+
+  document.querySelector(".switch a").innerText = isLogin ? "Sign Up" : "Log In";
 }
 
-body {
-  background: linear-gradient(to bottom, #fff5f5, #ffffff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+function togglePassword(icon) {
+  const input = icon.previousElementSibling;
+  input.type = input.type === "password" ? "text" : "password";
 }
 
-.container {
-  text-align: center;
-}
+function submitForm() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
-.card {
-  width: 380px;
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-}
+  if (isLogin) {
+    const user = accounts.find(
+      acc => acc.username === username && acc.password === password
+    );
 
-.header {
-  background: #ff1f2d;
-  color: white;
-  padding: 30px 20px;
-}
+    if (!user) {
+      alert("Invalid username or password");
+      return;
+    }
 
-.header h1 {
-  margin: 0;
-}
+    alert(`Login successful!\nRole: ${user.role.toUpperCase()}`);
+  } else {
+    const confirm = document.getElementById("confirm").value;
 
-.header p {
-  margin-top: 8px;
-  font-size: 14px;
-}
+    if (password !== confirm) {
+      alert("Passwords do not match");
+      return;
+    }
 
-.form {
-  padding: 25px;
-  text-align: left;
-}
-
-label {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.input-box {
-  display: flex;
-  align-items: center;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 8px 0 16px;
-}
-
-.input-box i {
-  color: #888;
-  font-size: 18px;
-}
-
-.input-box input {
-  border: none;
-  outline: none;
-  flex: 1;
-  margin-left: 8px;
-}
-
-.toggle {
-  cursor: pointer;
-}
-
-button {
-  width: 100%;
-  background: #ff1f2d;
-  border: none;
-  color: white;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #e60012;
-}
-
-.switch {
-  text-align: center;
-  margin-top: 16px;
-  font-size: 14px;
-}
-
-.switch a {
-  color: #ff1f2d;
-  font-weight: bold;
-  cursor: pointer;
-  margin-left: 4px;
-}
-
-.footer {
-  margin-top: 16px;
-  font-size: 13px;
-  color: #777;
-}
-
-.hidden {
-  display: none;
+    alert("Sign up successful! (not saved permanently)");
+  }
 }
