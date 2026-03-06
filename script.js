@@ -347,6 +347,11 @@ function generateReview(){
 
 }
 
+function backToDashboard(){
+    document.getElementById("result-page").classList.add("hidden");
+    document.getElementById("user-dashboard-page").classList.remove("hidden");
+}
+
 function showResults(score){
     document.getElementById("exam-page").classList.add("hidden");
     document.getElementById("result-page").classList.remove("hidden");
@@ -439,6 +444,7 @@ function saveExam(){
     backToAdmin();
 
 }
+
 
 
 
