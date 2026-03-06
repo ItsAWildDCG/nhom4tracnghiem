@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Online Exam Portal</title>
+<title>PTIT Online Exam Portal</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
@@ -15,7 +15,7 @@
   <div class="card">
 
     <div class="header">
-      <h1>Online Exam Portal</h1>
+      <h1>PTIT Online Exam Portal</h1>
       <p id="auth-subtitle">Welcome back! Please log in to continue.</p>
     </div>
 
@@ -203,9 +203,7 @@
     <!-- ADMIN ACTIONS -->
     <div class="search-container">
 
-      <button class="filter-btn" onclick="createExam()">
-        <i class="bx bx-plus"></i> Create Exam
-      </button>
+      <button onclick="openCreateExam()">Create Exam</button>
 
       <button class="filter-btn" onclick="manageExams()">
         <i class="bx bx-edit"></i> Manage Exams
@@ -226,6 +224,33 @@
       <div id="admin-panel"></div>
 
     </div>
+
+  </div>
+
+</div>
+
+<div id="create-exam-page" class="hidden">
+
+  <div class="topbar">
+    <div class="logo">
+      <i class="bx bxs-book"></i>
+      <strong>Create Exam</strong>
+    </div>
+
+    <button onclick="backToAdmin()">← Back</button>
+  </div>
+
+  <div class="content">
+
+    <h2>Create New Exam</h2>
+
+    <input id="exam-title" placeholder="Exam title">
+
+    <div id="question-container"></div>
+
+    <button onclick="addQuestion()">Add Question</button>
+
+    <button onclick="saveExam()">Save Exam</button>
 
   </div>
 
