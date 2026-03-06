@@ -132,7 +132,7 @@ function showAdminDashboard(username) {
 
   document.getElementById("welcome-text").innerText =
     "Welcome, " + username + "!";
-
+  loadStudents();
 }
 
 function logout() {
@@ -500,13 +500,6 @@ function loadStudents(){
 
 }
 
-function showAdminDashboard(){
-    document.getElementById("auth-page").classList.add("hidden");
-    document.getElementById("admin-dashboard-page").classList.remove("hidden");
-
-    loadStudents();
-
-}
 
 
 
