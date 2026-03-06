@@ -297,7 +297,6 @@ function nextQuestion(){
     currentQuestionIndex++;
     alert(currentQuestionIndex);
     if(currentQuestionIndex >= currentExam.questions.length){
-        alert(1);
         finishExam();
         return;
         
@@ -308,7 +307,6 @@ function nextQuestion(){
 }
 
 function finishExam(){
-        alert(2);
         showResults(score)
         score = 0;
         userAnswers = [];
@@ -316,7 +314,6 @@ function finishExam(){
 }
 
 function generateReview(){
-    alert(4);
     const container = document.getElementById("review-list");
 
     container.innerHTML = "";
@@ -351,7 +348,6 @@ function generateReview(){
 }
 
 function showResults(score){
-    alert(3);
     document.getElementById("exam-page").classList.add("hidden");
     document.getElementById("result-page").classList.remove("hidden");
 
@@ -362,6 +358,7 @@ function showResults(score){
 
     generateReview();
 }
+
 
 
 
