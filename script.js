@@ -500,8 +500,50 @@ function loadStudents(){
 
 }
 
+function openManageExams(){
 
+    document.getElementById("admin-dashboard-page").classList.add("hidden");
+    document.getElementById("manage-exams-page").classList.remove("hidden");
 
+    loadAdminExams();
+
+}
+
+function backToAdminDashboard(){
+
+    document.getElementById("manage-exams-page").classList.add("hidden");
+    document.getElementById("admin-dashboard-page").classList.remove("hidden");
+
+}
+
+function loadAdminExams(){
+
+    const container = document.getElementById("admin-exam-list");
+
+    container.innerHTML = "";
+
+    exams.forEach((exam, index) => {
+
+        const item = document.createElement("div");
+        item.className = "admin-exam-item";
+
+        item.innerHTML = `
+            <div class="admin-exam-info">
+                <strong>${exam.title}</strong>
+                <span>${exam.questions.length} questions</span>
+            </div>
+
+            <div class="admin-exam-actions">
+                <button onclick="editExam(${index})">Edit</button>
+                <button onclick="deleteExam(${index})">Delete</button>
+            </div>
+        `;
+
+        container.appendChild(item);
+
+    });
+
+}
 
 
 
