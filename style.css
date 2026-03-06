@@ -225,6 +225,26 @@ button {
   padding: 10px 16px;
 }
 
+.student-table{
+    width:100%;
+    border-collapse: collapse;
+    margin-top:20px;
+}
+
+.student-table th,
+.student-table td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:left;
+}
+
+.student-table th{
+    background:#f4f4f4;
+}
+
+.student-table tr:nth-child(even){
+    background:#fafafa;
+}
 
 
 
