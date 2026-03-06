@@ -352,7 +352,7 @@ function generateReview(){
 
 function showResults(score){
     alert(3);
-    document.getElementById("quiz-page").classList.add("hidden");
+    document.getElementById("exam-page").classList.add("hidden");
     document.getElementById("result-page").classList.remove("hidden");
 
     document.getElementById("result-title").innerText = currentExam.title;
@@ -362,6 +362,7 @@ function showResults(score){
 
     generateReview();
 }
+
 
 
 
