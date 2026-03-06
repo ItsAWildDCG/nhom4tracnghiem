@@ -359,6 +359,86 @@ function showResults(score){
     generateReview();
 }
 
+function openCreateExam(){
+
+    document.getElementById("admin-dashboard-page").classList.add("hidden");
+    document.getElementById("create-exam-page").classList.remove("hidden");
+
+}
+
+function backToAdmin(){
+
+    document.getElementById("create-exam-page").classList.add("hidden");
+    document.getElementById("admin-dashboard-page").classList.remove("hidden");
+
+}
+
+function addQuestion(){
+
+    const container = document.getElementById("question-container");
+
+    const div = document.createElement("div");
+
+    div.className = "question-block";
+
+    div.innerHTML = `
+
+        <input class="question" placeholder="Question">
+
+        <input class="option" placeholder="Option 1">
+        <input class="option" placeholder="Option 2">
+        <input class="option" placeholder="Option 3">
+        <input class="option" placeholder="Option 4">
+
+        <input class="answer" placeholder="Correct option (0-3)">
+
+        <hr>
+    `;
+
+    container.appendChild(div);
+
+}
+
+function saveExam(){
+
+    const title = document.getElementById("exam-title").value;
+
+    const blocks = document.querySelectorAll(".question-block");
+
+    const questions = [];
+
+    blocks.forEach(block => {
+
+        const question = block.querySelector(".question").value;
+
+        const options = Array.from(block.querySelectorAll(".option"))
+            .map(o => o.value);
+
+        const answer = parseInt(block.querySelector(".answer").value);
+
+        questions.push({
+            question: question,
+            options: options,
+            answer: answer
+        });
+
+    });
+
+    const exam = {
+        id: exams.length + 1,
+        title: title,
+        duration: 10,
+        type: "Custom",
+        questions: questions
+    };
+
+    exams.push(exam);
+
+    alert("Exam created!");
+
+    backToAdmin();
+
+}
 
 
 
