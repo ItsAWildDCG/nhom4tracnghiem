@@ -6,6 +6,38 @@ let users = [
   { username: "admin", password: "admin123", role: "admin" }
 ];
 
+const students = [
+
+  {
+    name: "Alice Nguyen",
+    examsTaken: 3,
+    avgScore: 8.2,
+    lastExam: "Math Basics"
+  },
+
+  {
+    name: "Tran Minh",
+    examsTaken: 5,
+    avgScore: 7.6,
+    lastExam: "English Grammar"
+  },
+
+  {
+    name: "Le Hoang",
+    examsTaken: 2,
+    avgScore: 9.0,
+    lastExam: "Science Quiz"
+  },
+
+  {
+    name: "Pham Anh",
+    examsTaken: 4,
+    avgScore: 6.8,
+    lastExam: "History Test"
+  }
+
+];
+
 function toggleMode() {
 
   isLogin = !isLogin;
@@ -445,8 +477,36 @@ function saveExam(){
 
 }
 
+function loadStudents(){
 
+    const tbody = document.getElementById("student-table-body");
 
+    tbody.innerHTML = "";
+
+    students.forEach(student => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${student.name}</td>
+            <td>${student.examsTaken}</td>
+            <td>${student.avgScore}</td>
+            <td>${student.lastExam}</td>
+        `;
+
+        tbody.appendChild(row);
+
+    });
+
+}
+
+function showAdminDashboard(){
+
+    document.getElementById("admin-dashboard-page").classList.remove("hidden");
+
+    loadStudents();
+
+}
 
 
 
