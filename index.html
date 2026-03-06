@@ -205,9 +205,7 @@
 
       <button onclick="openCreateExam()">Create Exam</button>
 
-      <button class="filter-btn" onclick="manageExams()">
-        <i class="bx bx-edit"></i> Manage Exams
-      </button>
+      <button onclick="openManageExams()">Manage Exams</button>
 
       <button class="filter-btn" onclick="viewUsers()">
         <i class="bx bx-group"></i> View Users
@@ -271,6 +269,32 @@
     <button onclick="addQuestion()">Add Question</button>
 
     <button onclick="saveExam()">Save Exam</button>
+
+  </div>
+
+</div>
+
+<div id="manage-exams-page" class="hidden">
+
+  <div class="topbar">
+
+    <div class="logo">
+      <strong>Manage Exams</strong>
+      <span>Admin Panel</span>
+    </div>
+
+    <button onclick="backToAdminDashboard()" class="logout">
+      ← Back
+    </button>
+
+  </div>
+
+  <div class="content">
+
+    <h2>Manage Exams</h2>
+    <p class="subtitle">Edit or delete existing exams</p>
+
+    <div id="admin-exam-list"></div>
 
   </div>
 
