@@ -501,12 +501,13 @@ function loadStudents(){
 }
 
 function showAdminDashboard(){
-
+    document.getElementById("auth-page").classList.add("hidden");
     document.getElementById("admin-dashboard-page").classList.remove("hidden");
 
     loadStudents();
 
 }
+
 
 
 
