@@ -1,356 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>PTIT Online Exam Portal</title>
-<link rel="stylesheet" href="style.css">
-<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>PTIT Online Exam Portal</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
 </head>
 
 <body>
 
-<!-- ================= AUTH PAGE ================= -->
-<div id="auth-page" class="auth-container">
+<div class="auth-container">
 
-  <div class="card">
+    <div class="card">
 
-    <div class="header">
-      <h1>PTIT Online Exam Portal</h1>
-      <p id="auth-subtitle">Welcome back! Please log in to continue.</p>
-    </div>
-
-    <div class="form">
-
-      <!-- USERNAME -->
-      <label>Username</label>
-      <div class="input-box">
-        <i class="bx bx-user"></i>
-        <input id="username" type="text" placeholder="Enter your username">
-      </div>
-
-      <!-- EMAIL (signup only) -->
-      <div id="email-field" class="hidden">
-        <label>Email</label>
-        <div class="input-box">
-          <i class="bx bx-envelope"></i>
-          <input id="email" type="email" placeholder="Enter your email">
+        <div class="header">
+            <h1>PTIT Online Exam Portal</h1>
+            <p id="auth-subtitle">Welcome back! Please log in to continue.</p>
         </div>
-      </div>
 
-      <!-- PASSWORD -->
-      <label>Password</label>
-      <div class="input-box">
-        <i class="bx bx-lock"></i>
-        <input id="password" type="password" placeholder="Enter your password">
-        <i class="bx bx-show toggle" onclick="togglePassword(this)"></i>
-      </div>
+        <div class="form">
 
-      <!-- CONFIRM PASSWORD (signup only) -->
-      <div id="confirm-field" class="hidden">
-        <label>Confirm Password</label>
-        <div class="input-box">
-          <i class="bx bx-lock"></i>
-          <input id="confirm-password" type="password" placeholder="Confirm password">
-        </div>
-      </div>
+            <!-- USERNAME -->
+            <label>Username</label>
+            <div class="input-box">
+                <i class="bx bx-user"></i>
+                <input id="username" type="text" placeholder="Enter your username">
+            </div>
 
-      <button id="auth-button" onclick="handleAuth()">Log In</button>
+            <!-- EMAIL -->
+            <div id="email-field" class="hidden">
+                <label>Email</label>
+                <div class="input-box">
+                    <i class="bx bx-envelope"></i>
+                    <input id="email" type="email" placeholder="Enter your email">
+                </div>
+            </div>
 
-      <p class="switch">
-        <span id="switch-text">Don't have an account?</span>
-        <a onclick="toggleMode()" id="switch-link">Sign Up</a>
-      </p>
+            <!-- PASSWORD -->
+            <label>Password</label>
+            <div class="input-box">
+                <i class="bx bx-lock"></i>
+                <input id="password" type="password" placeholder="Enter your password">
+                <i class="bx bx-show toggle" onclick="togglePassword(this)"></i>
+            </div>
 
-    </div>
+            <!-- CONFIRM PASSWORD -->
+            <div id="confirm-field" class="hidden">
+                <label>Confirm Password</label>
+                <div class="input-box">
+                    <i class="bx bx-lock"></i>
+                    <input id="confirm-password" type="password" placeholder="Confirm password">
+                </div>
+            </div>
 
-  </div>
+            <button id="auth-button">Log In</button>
 
-  <p class="footer">Secure authentication for online examinations</p>
-
-</div>
-
-
-<!-- ================= DASHBOARD ================= -->
-<div id="user-dashboard-page" class="hidden">
-
-  <!-- TOP BAR -->
-  <div class="topbar">
-
-    <div class="logo">
-      <i class="bx bxs-book"></i>
-      <div>
-        <strong>Online Exam Portal</strong>
-        <span id="welcome-text">Welcome, user!</span>
-      </div>
-    </div>
-
-    <button class="logout" onclick="logout()">
-      <i class="bx bx-log-out"></i> Log Out
-    </button>
-
-  </div>
-
-
-  <div class="content">
-
-    <!-- PAGE TITLE -->
-    <h2>Dashboard</h2>
-    <p class="subtitle">Browse and access your exams</p>
-
-
-    <!-- STATS -->
-    <div class="stats">
-
-      <div class="stat red">
-        <p>Total Exams</p>
-        <h3>2</h3>
-        <i class="bx bx-book"></i>
-      </div>
-
-      <div class="stat green">
-        <p>Free Access</p>
-        <h3>1</h3>
-        <i class="bx bx-time"></i>
-      </div>
-
-      <div class="stat orange">
-        <p>Time Sensitive</p>
-        <h3>1</h3>
-        <i class="bx bx-alarm"></i>
-      </div>
-
-    </div>
-
-
-    <!-- SEARCH BAR -->
-    <div class="search-container">
-
-      <div class="search-bar">
-        <i class="bx bx-search"></i>
-        <input type="text" placeholder="Search exams by name or subject...">
-      </div>
-
-      <button class="filter-btn">
-        <i class="bx bx-filter"></i> Filters
-      </button>
-
-    </div>
-
-
-    <!-- AVAILABLE EXAMS -->
-    <div class="exam-section">
-
-      <h3>Available Exams (2)</h3>
-
-    </div>
-    <div id="exam-list"></div>
-  </div>
-
-</div>
-
-<!-- ================= ADMIN DASHBOARD ================= -->
-<div id="admin-dashboard-page" class="hidden">
-
-  <!-- TOP BAR -->
-  <div class="topbar">
-
-    <div class="logo">
-      <i class="bx bxs-book"></i>
-      <div>
-        <strong>Online Exam Portal</strong>
-        <span id="admin-welcome-text">Welcome, Admin!</span>
-      </div>
-    </div>
-
-    <button class="logout" onclick="logout()">
-      <i class="bx bx-log-out"></i> Log Out
-    </button>
-
-  </div>
-
-
-  <div class="content">
-
-    <!-- PAGE TITLE -->
-    <h2>Admin Dashboard</h2>
-    <p class="subtitle">Manage exams and users</p>
-
-
-    <!-- STATS -->
-    <div class="stats">
-
-      <div class="stat red">
-        <p>Total Exams</p>
-        <h3 id="admin-total-exams">0</h3>
-        <i class="bx bx-book"></i>
-      </div>
-
-      <div class="stat green">
-        <p>Total Users</p>
-        <h3 id="admin-total-users">0</h3>
-        <i class="bx bx-user"></i>
-      </div>
-
-      <div class="stat orange">
-        <p>Active Exams</p>
-        <h3 id="admin-active-exams">0</h3>
-        <i class="bx bx-alarm"></i>
-      </div>
-
-    </div>
-
-
-    <!-- ADMIN ACTIONS -->
-    <div class="search-container">
-
-      <button onclick="openCreateExam()">Create Exam</button>
-
-      <button onclick="openManageExams()">Manage Exams</button>
-
-      <button class="filter-btn" onclick="viewUsers()">
-        <i class="bx bx-group"></i> View Users
-      </button>
-
-    </div>
-
-
-    <!-- ADMIN LIST AREA -->
-    <div class="exam-section">
-
-      <h3>System Overview</h3>
-
-        <div class="student-section">
-
-          <h3>Student Performance</h3>
-
-          <table class="student-table">
-
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>Exams Taken</th>
-                <th>Average Score</th>
-                <th>Last Exam</th>
-              </tr>
-            </thead>
-
-            <tbody id="student-table-body">
-            </tbody>
-
-          </table>
+            <p class="switch">
+                <span id="switch-text">Don't have an account?</span>
+                <a href="#" onclick="toggleMode()" id="switch-link">Sign Up</a>
+            </p>
 
         </div>
 
     </div>
 
-  </div>
+    <p class="footer">Secure authentication for online examinations</p>
 
 </div>
-
-<div id="create-exam-page" class="hidden">
-
-  <div class="topbar">
-    <div class="logo">
-      <i class="bx bxs-book"></i>
-      <strong>Create Exam</strong>
-    </div>
-
-    <button onclick="backToAdmin()">← Back</button>
-  </div>
-
-  <div class="content">
-
-    <h2>Create New Exam</h2>
-
-    <input id="exam-title" placeholder="Exam title">
-
-    <div id="question-container"></div>
-
-    <button onclick="addQuestion()">Add Question</button>
-
-    <button onclick="saveExam()">Save Exam</button>
-
-  </div>
-
-</div>
-
-<div id="manage-exams-page" class="hidden">
-
-  <div class="topbar">
-
-    <div class="logo">
-      <strong>Manage Exams</strong>
-      <span>Admin Panel</span>
-    </div>
-
-    <button onclick="backToAdminDashboard()" class="logout">
-      ← Back
-    </button>
-
-  </div>
-
-  <div class="content">
-
-    <h2>Manage Exams</h2>
-    <p class="subtitle">Edit or delete existing exams</p>
-
-    <div id="admin-exam-list"></div>
-
-  </div>
-
-</div>
-  
-<div id="exam-page" class="hidden">
-
-<h2 id="exam-title"></h2>
-  
-<div id="timer"></div>
-  
-<div class="question-box">
-
-    <h3 id="question-text"></h3>
-
-    <div id="options"></div>
-
-</div>
-
-<button onclick="nextQuestion()">Next Question</button>
-
-</div>  
-
-<div id="result-page" class="hidden">
-
-  <div class="content">
-
-    <h2>Exam Results</h2>
-
-    <div class="result-box">
-
-      <h3 id="result-title"></h3>
-
-      <p class="score">
-        Your Score: <strong id="score-text"></strong>
-      </p>
-
-      <p id="score-text"></p>
-
-    </div>
-
-    <!-- REVIEW SECTION -->
-    <div class="review-section">
-
-      <h3>Answer Review</h3>
-
-      <div id="review-list"></div>
-
-    </div>
-
-    <button onclick="backToDashboard()">Back to Dashboard</button>
-
-  </div>
-
-</div>
-  
 <script src="script.js"></script>
 </body>
 </html>

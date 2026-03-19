@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PTIT Online Exam Portal</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+<div id="admin-dashboard-page">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+
+        <div class="logo">
+            <i class="bx bxs-book"></i>
+            <div>
+                <strong>Online Exam Portal</strong>
+                <span id="admin-welcome-text">Welcome, Admin!</span>
+            </div>
+        </div>
+
+        <button class="logout" onclick="logout()">
+            <i class="bx bx-log-out"></i> Log Out
+        </button>
+
+    </div>
+
+
+    <div class="content">
+
+        <!-- PAGE TITLE -->
+        <h2>Admin Dashboard</h2>
+        <p class="subtitle">Manage exams and users</p>
+
+
+        <!-- STATS -->
+        <div class="stats">
+
+            <div class="stat red">
+                <p>Total Exams</p>
+                <h3 id="admin-total-exams">0</h3>
+                <i class="bx bx-book"></i>
+            </div>
+
+            <div class="stat green">
+                <p>Total Users</p>
+                <h3 id="admin-total-users">0</h3>
+                <i class="bx bx-user"></i>
+            </div>
+
+            <div class="stat orange">
+                <p>Active Exams</p>
+                <h3 id="admin-active-exams">0</h3>
+                <i class="bx bx-alarm"></i>
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN ACTIONS -->
+        <div class="search-container">
+
+            <button onclick="openCreateExam()">Create Exam</button>
+
+            <button onclick="openManageExams()">Manage Exams</button>
+
+            <button onclick="openViewUserss()">View Users</button>
+
+        </div>
+
+
+        <!-- ADMIN LIST AREA -->
+        <div class="exam-section">
+
+            <h3>System Overview</h3>
+
+            <div class="student-section">
+
+                <h3>Student Performance</h3>
+
+                <table class="student-table">
+
+                    <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Exams Taken</th>
+                        <th>Average Score</th>
+                        <th>Last Exam</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="student-table-body">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>

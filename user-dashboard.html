@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PTIT Online Exam Portal</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div id="user-dashboard-page">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+
+        <div class="logo">
+            <i class="bx bxs-book"></i>
+            <div>
+                <strong>Online Exam Portal</strong>
+                <span id="welcome-text">Welcome, user!</span>
+            </div>
+        </div>
+
+        <button class="logout" onclick="logout()">
+            <i class="bx bx-log-out"></i> Log Out
+        </button>
+
+    </div>
+
+
+    <div class="content">
+
+        <!-- PAGE TITLE -->
+        <h2>Dashboard</h2>
+        <p class="subtitle">Browse and access your exams</p>
+
+
+        <!-- STATS -->
+        <div class="stats">
+
+            <div class="stat red">
+                <p>Total Exams</p>
+                <h3>2</h3>
+                <i class="bx bx-book"></i>
+            </div>
+
+            <div class="stat green">
+                <p>Free Access</p>
+                <h3>1</h3>
+                <i class="bx bx-time"></i>
+            </div>
+
+            <div class="stat orange">
+                <p>Time Sensitive</p>
+                <h3>1</h3>
+                <i class="bx bx-alarm"></i>
+            </div>
+
+        </div>
+
+
+        <!-- SEARCH BAR -->
+        <div class="search-container">
+
+            <div class="search-bar">
+                <i class="bx bx-search"></i>
+                <input type="text" placeholder="Search exams by name or subject...">
+            </div>
+
+            <button class="filter-btn">
+                <i class="bx bx-filter"></i> Filters
+            </button>
+
+        </div>
+
+
+        <!-- AVAILABLE EXAMS -->
+        <div class="exam-section">
+
+            <h3>Available Exams (2)</h3>
+
+        </div>
+        <div id="exam-list"></div>
+    </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>

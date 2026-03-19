@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PTIT Online Exam Portal</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div id="manage-exams-page">
+    <div class="topbar">
+        <div class="logo">
+            <strong>Manage Exams</strong>
+            <span>Admin Panel</span>
+        </div>
+        <button onclick="backToAdminDashboard()" class="logout">
+            ← Back
+        </button>
+    </div>
+    <div class="content">
+        <h2>Manage Exams</h2>
+        <p class="subtitle">Edit or delete existing exams</p>
+        <div id="admin-exam-list"></div>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

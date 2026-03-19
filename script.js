@@ -6,6 +6,8 @@ let users = [
   { username: "admin", password: "admin123", role: "admin" }
 ];
 
+localStorage.setItem("currentUser", JSON.stringify(user));
+
 const students = [
 
   {
@@ -38,8 +40,27 @@ const students = [
 
 ];
 
-function toggleMode() {
+let students = JSON.parse(localStorage.getItem("students")) || [
+    {
+        username: "user1",
+        examsTaken: 2,
+        avgScore: 7.5,
+        history: [
+            { exam: "Math Test", score: "8/10" },
+            { exam: "CS Test", score: "7/10" }
+        ]
+    },
+    {
+        username: "user2",
+        examsTaken: 1,
+        avgScore: 9,
+        history: [
+            { exam: "Math Test", score: "9/10" }
+        ]
+    }
+];
 
+function toggleMode() {
   isLogin = !isLogin;
 
   document.getElementById("email-field").classList.toggle("hidden");
@@ -62,18 +83,19 @@ function toggleMode() {
     isLogin ? "Sign Up" : "Log In";
 }
 
+// 👁️ TOGGLE PASSWORD
 function togglePassword(icon) {
   const input = icon.previousElementSibling;
   input.type = input.type === "password" ? "text" : "password";
 }
 
-function handleAuth() {
 
+// 🚀 HANDLE AUTH
+function handleAuth() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
   if (isLogin) {
-
     const user = users.find(
       u => u.username === username && u.password === password
     );
@@ -82,14 +104,18 @@ function handleAuth() {
       alert("Invalid username or password");
       return;
     }
+
+    // ✅ SAVE USER (for next pages)
+    localStorage.setItem("currentUser", JSON.stringify(user));
+
+    // 🔀 REDIRECT BASED ON ROLE
     if (user.role === "admin") {
-        showAdminDashboard(user.username)
+      window.location.href = "admin-dashboard.html";
     } else {
-        showUserDashboard(user.username)
+      window.location.href = "user-dashboard.html";
     }
 
   } else {
-
     const email = document.getElementById("email").value;
     const confirm = document.getElementById("confirm-password").value;
 
@@ -114,33 +140,24 @@ function handleAuth() {
   }
 }
 
-function showUserDashboard(username) {
-
-  document.getElementById("auth-page").classList.add("hidden");
-  document.getElementById("user-dashboard-page").classList.remove("hidden");
-
-  document.getElementById("welcome-text").innerText =
-    "Welcome, " + username + "!";
-
-  loadExams();
-}
-
-function showAdminDashboard(username) {
-
-  document.getElementById("auth-page").classList.add("hidden");
-  document.getElementById("admin-dashboard-page").classList.remove("hidden");
-
-  document.getElementById("welcome-text").innerText =
-    "Welcome, " + username + "!";
-  loadStudents();
-}
-
 function logout() {
-  document.getElementById("admin-dashboard-page").classList.add("hidden");
-  document.getElementById("user-dashboard-page").classList.add("hidden");
-  document.getElementById("auth-page").classList.remove("hidden");
-
+  localStorage.removeItem("currentUser");
+  window.location.href = "index.html";
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  const welcomeText = document.getElementById("welcome-text");
+  if (welcomeText) {
+    welcomeText.innerText = "Welcome, " + user.username + "!";
+  }
+});
 
 let timerInterval;
 let timeLeft;
@@ -234,130 +251,191 @@ function loadExams(){
 function startExam(examId){
 
     const exam = exams.find(e => e.id === examId);
-
     if(!exam) return;
 
-    currentExam = exam;
-    currentQuestionIndex = 0;
+    localStorage.setItem("currentExam", JSON.stringify(exam));
 
-    document.getElementById("user-dashboard-page").classList.add("hidden");
-    document.getElementById("exam-page").classList.remove("hidden");
-
-    startTimer(currentExam.duration);
-  
-    loadQuestion();
+    window.location.href = "exam-page.html";
 }
 
-function startTimer(duration){
+function startTimer(minutes) {
 
-    let minutes = duration;
     timeLeft = minutes * 60;
 
-    const timerDisplay = document.getElementById("timer");
+    timerInterval = setInterval(() => {
 
-    timerInterval = setInterval(()=>{
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
 
-        let min = Math.floor(timeLeft / 60);
-        let sec = timeLeft % 60;
-
-        sec = sec < 10 ? "0" + sec : sec;
-
-        timerDisplay.innerText = `Time Remaining: ${min}:${sec}`;
+        document.getElementById("timer").innerText =
+            `${mins}:${secs < 10 ? "0" : ""}${secs}`;
 
         timeLeft--;
 
-        if(timeLeft < 0){
-            alert("Time is up!");
+        if (timeLeft < 0) {
+            clearInterval(timerInterval);
+            alert("Time's up!");
             finishExam();
-            return;
         }
 
-    },1000);
+    }, 1000);
 }
 
 let currentExam = null;
 let currentQuestionIndex = 0;
 
+document.addEventListener("DOMContentLoaded", function () {
+
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    if (!user) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    const examData = localStorage.getItem("currentExam");
+    if (!examData) {
+        window.location.href = "user-dashboard.html";
+        return;
+    }
+
+    currentExam = JSON.parse(examData);
+
+    // 📝 Set title
+    document.getElementById("exam-title").innerText = currentExam.title;
+
+    // ⏱ Start timer
+    startTimer(currentExam.duration);
+
+    // ❓ Load first question
+    loadQuestion();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const examData = localStorage.getItem("currentExam");
+    if (!examData) {
+        window.location.href = "user-dashboard.html";
+        return;
+    }
+
+    currentExam = JSON.parse(examData);
+
+    // 🧠 restore progress if exists
+    const savedAnswers = localStorage.getItem("userAnswers");
+    if (savedAnswers) {
+        userAnswers = JSON.parse(savedAnswers);
+        currentQuestionIndex = userAnswers.length;
+    }
+
+    document.getElementById("exam-title").innerText = currentExam.title;
+
+    startTimer(currentExam.duration);
+    loadQuestion();
+});
+
 function loadQuestion(){
 
     const question = currentExam.questions[currentQuestionIndex];
 
-    document.getElementById("exam-title").innerText = currentExam.title;
     document.getElementById("question-text").innerText = question.question;
 
     const optionsDiv = document.getElementById("options");
     optionsDiv.innerHTML = "";
 
-    question.options.forEach((opt,i)=>{
+    question.options.forEach((opt, i) => {
 
         const btn = document.createElement("button");
         btn.innerText = opt;
+
         btn.onclick = () => selectAnswer(i);
 
+        // ✅ restore selected answer
+        if (userAnswers[currentQuestionIndex] === i) {
+            btn.classList.add("selected");
+        }
+
         optionsDiv.appendChild(btn);
-
     });
-
 }
 
-let score = 0;
-let currentIndex = -1;
-
-function selectAnswer(optionIndex){
-    currentIndex = optionIndex;
-    
-    const buttons = document.querySelectorAll("#options button");
-
-    buttons.forEach(btn => {
-        btn.classList.remove("selected");
-    });
-
-    buttons[optionIndex].classList.add("selected");
-}
-
+let currentExam;
+let currentQuestionIndex = 0;
 let userAnswers = [];
 
+function selectAnswer(optionIndex){
+
+    const buttons = document.querySelectorAll("#options button");
+
+    buttons.forEach(btn => btn.classList.remove("selected"));
+
+    buttons[optionIndex].classList.add("selected");
+
+    userAnswers[currentQuestionIndex] = optionIndex;
+
+    // 💾 save instantly
+    localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
+}
+
+
 function nextQuestion(){
-  
-    const question = currentExam.questions[currentQuestionIndex];
-    userAnswers[currentQuestionIndex] = currentIndex;
-    if(currentIndex === question.answer){
-        score++;
+    if (userAnswers[currentQuestionIndex] === undefined) {
+        alert("Please select an answer!");
+        return;
     }
 
-    currentIndex = -1;
     currentQuestionIndex++;
-    alert(currentQuestionIndex);
+
     if(currentQuestionIndex >= currentExam.questions.length){
         finishExam();
         return;
-        
     }
 
     loadQuestion();
-
 }
 
 function finishExam(){
-        showResults(score)
-        score = 0;
-        userAnswers = [];
-        clearInterval(timerInterval);
-}
 
-function generateReview(){
-    const container = document.getElementById("review-list");
+    clearInterval(timerInterval);
 
-    container.innerHTML = "";
+    let score = 0;
 
     currentExam.questions.forEach((q, i) => {
+        if (userAnswers[i] === q.answer) {
+            score++;
+        }
+    });
 
-        const userAnswerIndex = userAnswers[i];
+    // 💾 Save result
+    localStorage.setItem("examResult", JSON.stringify({
+        examTitle: currentExam.title,
+        score: score,
+        total: currentExam.questions.length,
+        answers: userAnswers,
+        questions: currentExam.questions
+    }));
+
+    // 🧹 Cleanup
+    localStorage.removeItem("currentExam");
+    localStorage.removeItem("userAnswers");
+
+    // 🚀 Redirect to result page
+    window.location.href = "result-page.html";
+}
+
+function generateReview(result){
+
+    const container = document.getElementById("review-list");
+    container.innerHTML = "";
+
+    result.questions.forEach((q, i) => {
+
+        const userAnswerIndex = result.answers[i];
         const correctIndex = q.answer;
 
-        const userAnswer = userAnswerIndex !== -1
-            ? q.options[userAnswerIndex]
-            : "No answer";
+        const userAnswer =
+            userAnswerIndex !== undefined
+                ? q.options[userAnswerIndex]
+                : "No answer";
 
         const correctAnswer = q.options[correctIndex];
 
@@ -367,47 +445,54 @@ function generateReview(){
         item.innerHTML = `
             <h4>Question ${i+1}</h4>
             <p>${q.question}</p>
-
             <p><strong>You answered:</strong> ${userAnswer}</p>
-
             <p><strong>Correct answer:</strong> ${correctAnswer}</p>
         `;
 
         container.appendChild(item);
-
     });
-
 }
 
 function backToDashboard(){
-    document.getElementById("result-page").classList.add("hidden");
-    document.getElementById("user-dashboard-page").classList.remove("hidden");
+    window.location.href = "user-dashboard.html";
 }
 
-function showResults(score){
-    document.getElementById("exam-page").classList.add("hidden");
-    document.getElementById("result-page").classList.remove("hidden");
+document.addEventListener("DOMContentLoaded", function () {
 
-    document.getElementById("result-title").innerText = currentExam.title;
+    // ✅ Only run on result page
+    if (!document.getElementById("result-title")) return;
+
+    const resultData = localStorage.getItem("examResult");
+
+    if (!resultData) {
+        window.location.href = "user-dashboard.html";
+        return;
+    }
+
+    const result = JSON.parse(resultData);
+
+    document.getElementById("result-title").innerText = result.examTitle;
 
     document.getElementById("score-text").innerText =
-        `${score} / ${currentExam.questions.length}`;
+        `${result.score} / ${result.total}`;
 
-    generateReview();
-}
+    generateReview(result);
+});
 
 function openCreateExam(){
-
-    document.getElementById("admin-dashboard-page").classList.add("hidden");
-    document.getElementById("create-exam-page").classList.remove("hidden");
-
+    window.location.href = "create-exam.html";
 }
 
 function backToAdmin(){
+    window.location.href = "admin-dashboard.html";
+}
 
-    document.getElementById("create-exam-page").classList.add("hidden");
-    document.getElementById("admin-dashboard-page").classList.remove("hidden");
+function openManageExams(){
+    window.location.href = "manage-exams.html";
+}
 
+function backToAdminDashboard(){
+    window.location.href = "admin-dashboard.html";
 }
 
 function addQuestion(){
@@ -439,7 +524,6 @@ function addQuestion(){
 function saveExam(){
 
     const title = document.getElementById("exam-title").value;
-
     const blocks = document.querySelectorAll(".question-block");
 
     const questions = [];
@@ -454,9 +538,9 @@ function saveExam(){
         const answer = parseInt(block.querySelector(".answer").value);
 
         questions.push({
-            question: question,
-            options: options,
-            answer: answer
+            question,
+            options,
+            answer
         });
 
     });
@@ -471,10 +555,12 @@ function saveExam(){
 
     exams.push(exam);
 
+    // 💾 SAVE to localStorage
+    localStorage.setItem("exams", JSON.stringify(exams));
+
     alert("Exam created!");
 
-    backToAdmin();
-
+    window.location.href = "admin-dashboard.html";
 }
 
 function loadStudents(){
@@ -500,22 +586,6 @@ function loadStudents(){
 
 }
 
-function openManageExams(){
-
-    document.getElementById("admin-dashboard-page").classList.add("hidden");
-    document.getElementById("manage-exams-page").classList.remove("hidden");
-
-    loadAdminExams();
-
-}
-
-function backToAdminDashboard(){
-
-    document.getElementById("manage-exams-page").classList.add("hidden");
-    document.getElementById("admin-dashboard-page").classList.remove("hidden");
-
-}
-
 function loadAdminExams(){
 
     const container = document.getElementById("admin-exam-list");
@@ -534,28 +604,116 @@ function loadAdminExams(){
             </div>
 
             <div class="admin-exam-actions">
-                <button onclick="editExam(${index})">Edit</button>
                 <button onclick="deleteExam(${index})">Delete</button>
             </div>
         `;
 
         container.appendChild(item);
-
     });
-
 }
 
+function deleteExam(index){
 
+    if (!confirm("Are you sure you want to delete this exam?")) return;
 
+    exams.splice(index, 1);
 
+    localStorage.setItem("exams", JSON.stringify(exams));
 
+    loadAdminExams();
+}
 
+document.addEventListener("DOMContentLoaded", function () {
 
+    // Admin dashboard
+    if (document.getElementById("student-table-body")) {
+        loadStudents();
+    }
 
+    // Manage exams page
+    if (document.getElementById("admin-exam-list")) {
+        loadAdminExams();
+    }
+});
 
+function openViewUsers(){
+    window.location.href = "view-users.html";
+}
 
+function backToUsers(){
+    window.location.href = "view-users.html";
+}
 
+function loadUsers(){
 
+    const container = document.getElementById("user-list");
+    container.innerHTML = "";
+
+    students.forEach((user, index) => {
+
+        const div = document.createElement("div");
+        div.className = "user-card";
+
+        div.innerHTML = `
+            <h4>${user.username}</h4>
+            <p>Exams Taken: ${user.examsTaken}</p>
+            <p>Average Score: ${user.avgScore}</p>
+            <button onclick="viewUser(${index})">View Details</button>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+function viewUser(index){
+
+    localStorage.setItem("selectedUser", JSON.stringify(students[index]));
+
+    window.location.href = "user-detail.html";
+}
+
+function loadUserDetail(){
+
+    const data = localStorage.getItem("selectedUser");
+    if (!data) {
+        window.location.href = "view-users.html";
+        return;
+    }
+
+    const user = JSON.parse(data);
+
+    document.getElementById("user-name").innerText = user.username;
+
+    document.getElementById("user-stats").innerHTML = `
+        <p><strong>Exams Taken:</strong> ${user.examsTaken}</p>
+        <p><strong>Average Score:</strong> ${user.avgScore}</p>
+    `;
+
+    const historyDiv = document.getElementById("user-history");
+    historyDiv.innerHTML = "";
+
+    user.history.forEach(item => {
+
+        const div = document.createElement("div");
+
+        div.innerHTML = `
+            <p><strong>${item.exam}</strong> - ${item.score}</p>
+        `;
+
+        historyDiv.appendChild(div);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    if (document.getElementById("user-list")) {
+        loadUsers();
+    }
+
+    if (document.getElementById("user-name")) {
+        loadUserDetail();
+    }
+});
 
 
 

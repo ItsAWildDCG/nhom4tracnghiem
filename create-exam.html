@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PTIT Online Exam Portal</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div id="create-exam-page">
+
+    <div class="topbar">
+        <div class="logo">
+            <i class="bx bxs-book"></i>
+            <strong>Create Exam</strong>
+        </div>
+
+        <button onclick="backToAdmin()">← Back</button>
+    </div>
+
+    <div class="content">
+
+        <h2>Create New Exam</h2>
+
+        <input id="exam-title" placeholder="Exam title">
+
+        <div id="question-container"></div>
+
+        <button onclick="addQuestion()">Add Question</button>
+
+        <button onclick="saveExam()">Save Exam</button>
+
+    </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>
