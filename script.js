@@ -249,9 +249,6 @@ function startTimer(minutes) {
     }, 1000);
 }
 
-let currentExam = null;
-let currentQuestionIndex = 0;
-
 document.addEventListener("DOMContentLoaded", function () {
 
     const user = JSON.parse(localStorage.getItem("currentUser"));
