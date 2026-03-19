@@ -6,9 +6,6 @@ let users = [
   { username: "admin", password: "admin123", role: "admin" }
 ];
 
-let user;
-
-localStorage.setItem("currentUser", JSON.stringify(user));
 
 let students = JSON.parse(localStorage.getItem("students")) || [
     {
@@ -66,7 +63,7 @@ function handleAuth() {
   const password = document.getElementById("password").value;
 
   if (isLogin) {
-    user = users.find(
+    const user = users.find(
       u => u.username === username && u.password === password
     );
 
@@ -114,20 +111,6 @@ function logout() {
   localStorage.removeItem("currentUser");
   window.location.href = "index.html";
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-  const user = JSON.parse(localStorage.getItem("currentUser"));
-
-  if (!user) {
-    window.location.href = "index.html";
-    return;
-  }
-
-  const welcomeText = document.getElementById("welcome-text");
-  if (welcomeText) {
-    welcomeText.innerText = "Welcome, " + user.username + "!";
-  }
-});
 
 let timerInterval;
 let timeLeft;
@@ -251,54 +234,6 @@ function startTimer(minutes) {
     }, 1000);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    if (!user) {
-        window.location.href = "index.html";
-        return;
-    }
-
-    const examData = localStorage.getItem("currentExam");
-    if (!examData) {
-        window.location.href = "user-dashboard.html";
-        return;
-    }
-
-    currentExam = JSON.parse(examData);
-
-    // 📝 Set title
-    document.getElementById("exam-title").innerText = currentExam.title;
-
-    // ⏱ Start timer
-    startTimer(currentExam.duration);
-
-    // ❓ Load first question
-    loadQuestion();
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const examData = localStorage.getItem("currentExam");
-    if (!examData) {
-        window.location.href = "user-dashboard.html";
-        return;
-    }
-
-    currentExam = JSON.parse(examData);
-
-    // 🧠 restore progress if exists
-    const savedAnswers = localStorage.getItem("userAnswers");
-    if (savedAnswers) {
-        userAnswers = JSON.parse(savedAnswers);
-        currentQuestionIndex = userAnswers.length;
-    }
-
-    document.getElementById("exam-title").innerText = currentExam.title;
-
-    startTimer(currentExam.duration);
-    loadQuestion();
-});
 
 function loadQuestion(){
 
@@ -424,27 +359,6 @@ function backToDashboard(){
     window.location.href = "user-dashboard.html";
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    // ✅ Only run on result page
-    if (!document.getElementById("result-title")) return;
-
-    const resultData = localStorage.getItem("examResult");
-
-    if (!resultData) {
-        window.location.href = "user-dashboard.html";
-        return;
-    }
-
-    const result = JSON.parse(resultData);
-
-    document.getElementById("result-title").innerText = result.examTitle;
-
-    document.getElementById("score-text").innerText =
-        `${result.score} / ${result.total}`;
-
-    generateReview(result);
-});
 
 function openCreateExam(){
     window.location.href = "create-exam.html";
@@ -590,18 +504,6 @@ function deleteExam(index){
     loadAdminExams();
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    // Admin dashboard
-    if (document.getElementById("student-table-body")) {
-        loadStudents();
-    }
-
-    // Manage exams page
-    if (document.getElementById("admin-exam-list")) {
-        loadAdminExams();
-    }
-});
 
 function openViewUsers(){
     window.location.href = "view-users.html";
@@ -671,17 +573,96 @@ function loadUserDetail(){
     });
 }
 
+function initExamPage(){
+
+    const examData = localStorage.getItem("currentExam");
+    if (!examData) {
+        window.location.href = "user-dashboard.html";
+        return;
+    }
+
+    currentExam = JSON.parse(examData);
+
+    const savedAnswers = localStorage.getItem("userAnswers");
+    if (savedAnswers) {
+        userAnswers = JSON.parse(savedAnswers);
+        currentQuestionIndex = userAnswers.length;
+    }
+
+    document.getElementById("exam-title").innerText = currentExam.title;
+
+    startTimer(currentExam.duration);
+    loadQuestion();
+}
+
+function initResultPage(){
+
+    const resultData = localStorage.getItem("examResult");
+
+    if (!resultData) {
+        window.location.href = "user-dashboard.html";
+        return;
+    }
+
+    const result = JSON.parse(resultData);
+
+    document.getElementById("result-title").innerText = result.examTitle;
+
+    document.getElementById("score-text").innerText =
+        `${result.score} / ${result.total}`;
+
+    generateReview(result);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    // 🔐 Protect pages (except login)
+    if (!user && !document.getElementById("auth-button")) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    // 👋 Welcome text
+    const welcomeText = document.getElementById("welcome-text");
+    if (welcomeText && user) {
+        welcomeText.innerText = "Welcome, " + user.username + "!";
+    }
+
+    // 📊 USER DASHBOARD
+    if (document.getElementById("exam-list")) {
+        loadExams();
+    }
+
+    // 📝 EXAM PAGE
+    if (document.getElementById("question-text")) {
+        initExamPage();
+    }
+
+    // 📊 RESULT PAGE
+    if (document.getElementById("result-title")) {
+        initResultPage();
+    }
+
+    // 👨‍💼 ADMIN DASHBOARD
+    if (document.getElementById("student-table-body")) {
+        loadStudents();
+    }
+
+    // 🛠 MANAGE EXAMS
+    if (document.getElementById("admin-exam-list")) {
+        loadAdminExams();
+    }
+
+    // 👥 VIEW USERS
     if (document.getElementById("user-list")) {
         loadUsers();
     }
 
+    // 👤 USER DETAIL
     if (document.getElementById("user-name")) {
         loadUserDetail();
     }
+
 });
-
-
-
-
