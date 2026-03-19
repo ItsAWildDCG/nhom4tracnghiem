@@ -8,8 +8,6 @@ let users = [
 
 localStorage.setItem("currentUser", JSON.stringify(user));
 
-];
-
 let students = JSON.parse(localStorage.getItem("students")) || [
     {
         username: "user1",
