@@ -8,36 +8,6 @@ let users = [
 
 localStorage.setItem("currentUser", JSON.stringify(user));
 
-const students = [
-
-  {
-    name: "Alice Nguyen",
-    examsTaken: 3,
-    avgScore: 8.2,
-    lastExam: "Math Basics"
-  },
-
-  {
-    name: "Tran Minh",
-    examsTaken: 5,
-    avgScore: 7.6,
-    lastExam: "English Grammar"
-  },
-
-  {
-    name: "Le Hoang",
-    examsTaken: 2,
-    avgScore: 9.0,
-    lastExam: "Science Quiz"
-  },
-
-  {
-    name: "Pham Anh",
-    examsTaken: 4,
-    avgScore: 6.8,
-    lastExam: "History Test"
-  }
-
 ];
 
 let students = JSON.parse(localStorage.getItem("students")) || [
