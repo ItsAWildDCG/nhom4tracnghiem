@@ -6,6 +6,8 @@ let users = [
   { username: "admin", password: "admin123", role: "admin" }
 ];
 
+let user;
+
 localStorage.setItem("currentUser", JSON.stringify(user));
 
 let students = JSON.parse(localStorage.getItem("students")) || [
@@ -64,7 +66,7 @@ function handleAuth() {
   const password = document.getElementById("password").value;
 
   if (isLogin) {
-    const user = users.find(
+    user = users.find(
       u => u.username === username && u.password === password
     );
 
