@@ -68,7 +68,7 @@
 
             <button onclick="openManageExams()">Manage Exams</button>
 
-            <button onclick="openViewUserss()">View Users</button>
+            <button onclick="openViewUsers()">View Users</button>
 
         </div>
 
@@ -78,26 +78,11 @@
 
             <h3>System Overview</h3>
 
-            <div class="student-section">
-
-                <h3>Student Performance</h3>
-
-                <table class="student-table">
-
-                    <thead>
-                    <tr>
-                        <th>Student</th>
-                        <th>Exams Taken</th>
-                        <th>Average Score</th>
-                        <th>Last Exam</th>
-                    </tr>
-                    </thead>
-
-                    <tbody id="student-table-body">
-                    </tbody>
-
-                </table>
-
+            <div class="stats">
+                <div>Total Students: <span id="total-students"></span></div>
+                <div>Total Exams: <span id="total-exams"></span></div>
+                <div>Total Attempts: <span id="total-attempts"></span></div>
+                <div>Average Score: <span id="avg-score"></span></div>
             </div>
 
         </div>

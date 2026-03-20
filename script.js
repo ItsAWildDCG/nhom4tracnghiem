@@ -1,31 +1,6 @@
 let isLogin = true;
 
-let users = [
-  { username: "baba", password: "123456", role: "user" },
-  { username: "student", password: "password", role: "user" },
-  { username: "admin", password: "admin123", role: "admin" }
-];
-
-
-let students = JSON.parse(localStorage.getItem("students")) || [
-    {
-        username: "user1",
-        examsTaken: 2,
-        avgScore: 7.5,
-        history: [
-            { exam: "Math Test", score: "8/10" },
-            { exam: "CS Test", score: "7/10" }
-        ]
-    },
-    {
-        username: "user2",
-        examsTaken: 1,
-        avgScore: 9,
-        history: [
-            { exam: "Math Test", score: "9/10" }
-        ]
-    }
-];
+const examId = localStorage.getItem("editingExamId");
 
 function toggleMode() {
   isLogin = !isLogin;
@@ -59,52 +34,88 @@ function togglePassword(icon) {
 
 // 🚀 HANDLE AUTH
 function handleAuth() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
-  if (isLogin) {
-    const user = users.find(
-      u => u.username === username && u.password === password
-    );
-
-    if (!user) {
-      alert("Invalid username or password");
-      return;
-    }
-
-    // ✅ SAVE USER (for next pages)
-    localStorage.setItem("currentUser", JSON.stringify(user));
-
-    // 🔀 REDIRECT BASED ON ROLE
-    if (user.role === "admin") {
-      window.location.href = "admin-dashboard.html";
+    if (isLogin) {
+        login();
     } else {
-      window.location.href = "user-dashboard.html";
+        register();
     }
+}
 
-  } else {
+async function register() {
+
+    const username = document.getElementById("username").value;
     const email = document.getElementById("email").value;
-    const confirm = document.getElementById("confirm-password").value;
+    const password = document.getElementById("password").value;
 
-    if (!username || !email || !password) {
-      alert("Please fill all fields");
-      return;
+    try {
+        const res = await fetch("http://localhost:8080/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                email,
+                password
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message);
+            return;
+        }
+
+        alert("Account created! Please log in.");
+        toggleMode();
+
+    } catch (err) {
+        console.error(err);
+        alert("Server error");
     }
+}
 
-    if (password !== confirm) {
-      alert("Passwords do not match");
-      return;
+async function login() {
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const res = await fetch("http://localhost:8080/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message);
+            return;
+        }
+
+        // 💾 Save user + token
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("currentUser", JSON.stringify(data.user));
+
+        // 🔀 Redirect
+        if (data.user.role === "admin") {
+            window.location.href = "admin-dashboard.html";
+        } else {
+            window.location.href = "user-dashboard.html";
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Server error");
     }
-
-    users.push({
-      username: username,
-      password: password,
-      role: "user"
-    });
-
-    alert("Account created! Please log in.");
-    toggleMode();
-  }
 }
 
 function logout() {
@@ -112,104 +123,156 @@ function logout() {
   window.location.href = "index.html";
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    // 🔐 Protect pages (except login)
+    if (!user && !document.getElementById("auth-button")) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    // 👋 Welcome text
+    const welcomeText = document.getElementById("welcome-text");
+    if (welcomeText && user) {
+        welcomeText.innerText = "Welcome, " + user.username + "!";
+    }
+
+    // 📊 USER DASHBOARD
+    if (document.getElementById("exam-list")) {
+        loadExams();
+        loadMyResults();
+    }
+
+    // 📝 EXAM PAGE
+    if (document.getElementById("question-text")) {
+        loadExam();
+    }
+
+    // 📊 RESULT PAGE
+    if (document.getElementById("result-title")) {
+        initResultPage();
+    }
+
+    // 👨‍💼 ADMIN DASHBOARD
+    if (document.getElementById("student-table-body")) {
+        loadStudents();
+        loadAdminDashboard();
+    }
+
+    // 🛠 MANAGE EXAMS
+    if (document.getElementById("admin-exam-list")) {
+        loadAdminExams();
+        loadExamForEdit();
+    }
+
+    // 👥 VIEW USERS
+    if (document.getElementById("user-list")) {
+        loadUsers();
+    }
+
+    // 👤 USER DETAIL
+    if (document.getElementById("user-name")) {
+        loadUserDetail();
+    }
+
+});
+
 let timerInterval;
 let timeLeft;
 
-const exams = [
-{
-    id: 1,
-    title: "Mathematics Practice Test",
-    subject: "Math",
-    type: "practice",
-    duration: 60,
-    questions: [
-        {
-            question: "5 + 7 = ?",
-            options: ["10","11","12","13"],
-            answer: 2
-        },
-        {
-            question: "9 x 3 = ?",
-            options: ["18","27","21","24"],
-            answer: 1
-        }
-    ]
-},
+async function loadMyResults() {
+    console.log("Loading results...");
+    const userId = localStorage.getItem("userId");
+    console.log(userId);
+    try {
+        const res = await fetch(
+            `http://localhost:8080/api/results/me?userId=${userId}`
+        );
 
-{
-    id: 2,
-    title: "Computer Science Mid-Term",
-    subject: "CS",
-    type: "midterm",
-    duration: 120,
-    questions: [
-        {
-            question: "What does CPU stand for?",
-            options: [
-                "Central Processing Unit",
-                "Computer Personal Unit",
-                "Central Program Utility",
-                "Core Processing Utility"
-            ],
-            answer: 0
-        },
-        {
-            question: "Which language runs in a browser?",
-            options: ["Python","Java","C++","JavaScript"],
-            answer: 3
-        }
-    ]
-}
-];
+        const results = await res.json();
 
-function loadExams(){
+        const container = document.getElementById("results-list");
+        container.innerHTML = "";
 
-    const container = document.getElementById("exam-list");
+        results.forEach(r => {
+            const div = document.createElement("div");
 
-    container.innerHTML = "";
+            div.innerHTML = `
+                <h4>${r.title}</h4>
+                <p>Score: ${r.score}</p>
+                <p>Date: ${r.date}</p>
+            `;
 
-    exams.forEach(exam => {
+            container.appendChild(div);
+        });
 
-        const card = document.createElement("div");
-        card.className = "exam-card";
-
-        card.innerHTML = `
-        <div class="exam-info">
-
-            <div class="tags">
-                <span class="tag">${exam.type}</span>
-            </div>
-
-            <h4>${exam.title}</h4>
-
-            <div class="exam-meta">
-                <span>${exam.duration} minutes</span>
-                <span>${exam.questions.length} questions</span>
-            </div>
-
-        </div>
-
-        <button class="start-btn">Start Exam →</button>
-        `;
-
-        card.querySelector(".start-btn")
-            .addEventListener("click", () => startExam(exam.id));
-
-        container.appendChild(card);
-
-    });
-
+    } catch (err) {
+        console.error(err);
+    }
 }
 
-function startExam(examId){
+async function loadExams() {
+    console.log("Loading exams...");
+    try {
+        const res = await fetch("http://localhost:8080/api/exams");
+        const exams = await res.json();
 
-    const exam = exams.find(e => e.id === examId);
-    if(!exam) return;
+        const container = document.getElementById("exam-list");
+        container.innerHTML = "";
 
-    localStorage.setItem("currentExam", JSON.stringify(exam));
+        exams.forEach(exam => {
+            const div = document.createElement("div");
 
+            div.innerHTML = `
+                <h3>${exam.title}</h3>
+                <p>${exam.questionCount} questions - ${exam.duration} minutes</p>
+                <button onclick="startExam(${exam.id})">Start</button>
+            `;
+
+            container.appendChild(div);
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function startExam(id) {
+    localStorage.setItem("currentExamId", id);
+    console.log(localStorage.getItem("currentExamId"))
     window.location.href = "exam-page.html";
 }
+
+
+async function loadExam() {
+
+    const examId = localStorage.getItem("currentExamId");
+    try {
+        const res = await fetch(
+            `http://localhost:8080/api/exams/${examId}`
+        );
+        console.log("FETCH OK");
+        const exam = await res.json();
+        currentExam = exam;
+        localStorage.setItem("currentExam", JSON.stringify(currentExam));
+        console.log(currentExam)
+        const savedAnswers = localStorage.getItem("userAnswers");
+        if (savedAnswers) {
+            userAnswers = JSON.parse(savedAnswers);
+            currentQuestionIndex = userAnswers.length;
+        }
+        document.getElementById("exam-title").innerText = currentExam.title;
+        startTimer(currentExam.duration);
+        loadQuestion();
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load exam");
+        window.location.href = "user-dashboard.html";
+    }
+}
+
 
 function startTimer(minutes) {
 
@@ -233,6 +296,7 @@ function startTimer(minutes) {
 
     }, 1000);
 }
+
 
 
 function loadQuestion(){
@@ -294,58 +358,58 @@ function nextQuestion(){
 
     loadQuestion();
 }
-
-function finishExam(){
+async function finishExam() {
 
     clearInterval(timerInterval);
-
-    let score = 0;
-
-    currentExam.questions.forEach((q, i) => {
-        if (userAnswers[i] === q.answer) {
-            score++;
-        }
-    });
-
-    // 💾 Save result
-    localStorage.setItem("examResult", JSON.stringify({
-        examTitle: currentExam.title,
-        score: score,
-        total: currentExam.questions.length,
-        answers: userAnswers,
-        questions: currentExam.questions
+    const examId = localStorage.getItem("currentExamId");
+    const answers = userAnswers.map((ans, index) => ({
+        questionId: index,
+        selectedOption: ans
     }));
 
-    // 🧹 Cleanup
-    localStorage.removeItem("currentExam");
-    localStorage.removeItem("userAnswers");
+    try {
+        const userId = localStorage.getItem("userId");
+        console.log("Submitting answers:", answers);
+        const res = await fetch(`http://localhost:8080/api/exams/${examId}/submit?userId=${userId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                answers
+            })
+        });
 
-    // 🚀 Redirect to result page
-    window.location.href = "result-page.html";
+        const result = await res.json();
+
+        localStorage.setItem("examResult", JSON.stringify(result));
+
+        localStorage.removeItem("currentExam");
+        localStorage.removeItem("userAnswers");
+
+        window.location.href = "result-page.html";
+
+    } catch (err) {
+        console.error(err);
+        alert("Submit failed");
+    }
 }
 
-function generateReview(result){
-
+function generateReview(result) {
     const container = document.getElementById("review-list");
     container.innerHTML = "";
 
-    result.questions.forEach((q, i) => {
-
-        const userAnswerIndex = result.answers[i];
-        const correctIndex = q.answer;
-
+    result.review.forEach((q, i) => {
         const userAnswer =
-            userAnswerIndex !== undefined
-                ? q.options[userAnswerIndex]
-                : "No answer";
+            q.selected !== null ? q.selected : "No answer";
 
-        const correctAnswer = q.options[correctIndex];
+        const correctAnswer = q.correct;
 
         const item = document.createElement("div");
         item.className = "review-item";
 
         item.innerHTML = `
-            <h4>Question ${i+1}</h4>
+            <h4>Question ${i + 1}</h4>
             <p>${q.question}</p>
             <p><strong>You answered:</strong> ${userAnswer}</p>
             <p><strong>Correct answer:</strong> ${correctAnswer}</p>
@@ -355,10 +419,32 @@ function generateReview(result){
     });
 }
 
+async function loadAdminDashboard() {
+
+    try {
+        const res = await fetch("http://localhost:8080/api/admin/dashboard");
+        const data = await res.json();
+
+        console.log(data);
+        console.log(data.students);
+        console.log(data.exams);
+        console.log(data.attempts);
+        console.log(data.avgScore);
+
+        document.getElementById("total-students").innerText = data.students;
+        document.getElementById("total-exams").innerText = data.exams;
+        document.getElementById("total-attempts").innerText = data.attempts;
+        document.getElementById("avg-score").innerText = data.avgScore;
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load dashboard");
+    }
+}
+
 function backToDashboard(){
     window.location.href = "user-dashboard.html";
 }
-
 
 function openCreateExam(){
     window.location.href = "create-exam.html";
@@ -376,72 +462,114 @@ function backToAdminDashboard(){
     window.location.href = "admin-dashboard.html";
 }
 
-function addQuestion(){
+function addQuestion(data = null) {
 
     const container = document.getElementById("question-container");
 
     const div = document.createElement("div");
-
     div.className = "question-block";
 
     div.innerHTML = `
+        <input class="question" placeholder="Question"
+               value="${data ? data.question : ""}">
 
-        <input class="question" placeholder="Question">
+        <input class="option" placeholder="Option 1"
+               value="${data ? data.options[0] : ""}">
+        <input class="option" placeholder="Option 2"
+               value="${data ? data.options[1] : ""}">
+        <input class="option" placeholder="Option 3"
+               value="${data ? data.options[2] : ""}">
+        <input class="option" placeholder="Option 4"
+               value="${data ? data.options[3] : ""}">
 
-        <input class="option" placeholder="Option 1">
-        <input class="option" placeholder="Option 2">
-        <input class="option" placeholder="Option 3">
-        <input class="option" placeholder="Option 4">
-
-        <input class="answer" placeholder="Correct option (0-3)">
-
-        <hr>
+        <input class="answer" type="number" min="0" max="3"
+               value="${data ? data.answer : ""}">
     `;
 
     container.appendChild(div);
-
 }
 
-function saveExam(){
-
+async function saveExam() {
+    // 🧠 Get values from form
     const title = document.getElementById("exam-title").value;
-    const blocks = document.querySelectorAll(".question-block");
+    const duration = parseInt(document.getElementById("duration").value);
+
+    // 🧠 Build questions array (IMPORTANT)
+    const questions = collectQuestions(); // ← you must implement this
+
+    const examId = localStorage.getItem("editingExamId");
+
+    const url = examId
+        ? `http://localhost:8080/api/admin/exams/${examId}`
+        : `http://localhost:8080/api/admin/exams`;
+
+    const method = examId ? "PUT" : "POST";
+
+    try {
+        const res = await fetch(url, {
+            method,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title,
+                duration,
+                questions
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Something went wrong");
+            return;
+        }
+
+        if (examId) {
+            localStorage.removeItem("editingExamId");
+            alert("Exam updated!");
+        } else {
+            alert("Exam created!");
+        }
+
+        // 🔥 Redirect back to admin dashboard
+        window.location.href = "admin-dashboard.html";
+
+    } catch (err) {
+        console.error(err);
+        alert("Server error");
+    }
+}
+
+function collectQuestions() {
+    const questionBlocks = document.querySelectorAll(".question-block");
 
     const questions = [];
 
-    blocks.forEach(block => {
+    questionBlocks.forEach((block, index) => {
+        const questionText = block.querySelector(".question").value;
 
-        const question = block.querySelector(".question").value;
+        const optionEls = block.querySelectorAll(".option");
+        const options = Array.from(optionEls).map(opt => opt.value);
 
-        const options = Array.from(block.querySelectorAll(".option"))
-            .map(o => o.value);
+        const answer = parseInt(
+            block.querySelector(".answer").value
+        );
 
-        const answer = parseInt(block.querySelector(".answer").value);
+        if (!questionText || options.some(opt => !opt)) {
+            alert("Please fill all question fields");
+            return [];
+        }
 
         questions.push({
-            question,
-            options,
-            answer
+            id: index, // or keep existing if editing
+            question: questionText,
+            options: options,
+            answer: answer
         });
-
     });
 
-    const exam = {
-        id: exams.length + 1,
-        title: title,
-        duration: 10,
-        type: "Custom",
-        questions: questions
-    };
-
-    exams.push(exam);
-
-    // 💾 SAVE to localStorage
-    localStorage.setItem("exams", JSON.stringify(exams));
-
-    alert("Exam created!");
-
-    window.location.href = "admin-dashboard.html";
+    return questions;
 }
 
 function loadStudents(){
@@ -467,41 +595,98 @@ function loadStudents(){
 
 }
 
-function loadAdminExams(){
+async function loadAdminExams() {
 
     const container = document.getElementById("admin-exam-list");
-
     container.innerHTML = "";
 
-    exams.forEach((exam, index) => {
+    try {
+        const res = await fetch("http://localhost:8080/api/admin/exams");
+        const exams = await res.json();
 
-        const item = document.createElement("div");
-        item.className = "admin-exam-item";
+        exams.forEach((exam) => {
 
-        item.innerHTML = `
-            <div class="admin-exam-info">
-                <strong>${exam.title}</strong>
-                <span>${exam.questions.length} questions</span>
-            </div>
+            const item = document.createElement("div");
+            item.className = "admin-exam-item";
 
-            <div class="admin-exam-actions">
-                <button onclick="deleteExam(${index})">Delete</button>
-            </div>
-        `;
+            item.innerHTML = `
+                <div class="admin-exam-info">
+                    <strong>${exam.title}</strong>
+                    <span>${exam.questionCount} questions</span>
+                    <span>Attempts: ${exam.attempts}</span>
+                    <span>Avg: ${exam.avgScore}</span>
+                </div>
 
-        container.appendChild(item);
-    });
+                <div class="admin-exam-actions">
+                    <button onclick="editExam(${exam.id})">Edit</button>
+                    <button onclick="deleteExam(${exam.id})">Delete</button>
+                </div>
+            `;
+
+            container.appendChild(item);
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
 }
 
-function deleteExam(index){
+function editExam(id) {
+    localStorage.setItem("editingExamId", id);
+    window.location.href = "create-exam.html"; // reuse page
+}
 
-    if (!confirm("Are you sure you want to delete this exam?")) return;
+async function loadExamForEdit() {
 
-    exams.splice(index, 1);
+    const examId = localStorage.getItem("editingExamId");
+    if (!examId) return;
 
-    localStorage.setItem("exams", JSON.stringify(exams));
+    try {
+        const res = await fetch(`http://localhost:8080/api/admin/exams/${examId}`);
+        const exam = await res.json();
 
-    loadAdminExams();
+        // Fill title
+        document.getElementById("exam-title").value = exam.title;
+
+        // Clear old UI
+        const container = document.getElementById("questions-container");
+        container.innerHTML = "";
+
+        // Rebuild questions
+        exam.questions.forEach((q) => {
+            addQuestion(q);
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function deleteExam(id) {
+
+    if (!confirm("Are you sure you want to delete this exam?")) {
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `http://localhost:8080/api/admin/exams/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const data = await res.json();
+
+        alert("Exam deleted!");
+
+        // 🔄 Reload list
+        loadAdminExams();
+
+    } catch (err) {
+        console.error(err);
+        alert("Delete failed");
+    }
 }
 
 
@@ -513,86 +698,76 @@ function backToUsers(){
     window.location.href = "view-users.html";
 }
 
-function loadUsers(){
+async function loadUsers() {
 
-    const container = document.getElementById("user-list");
-    container.innerHTML = "";
+    const tbody = document.getElementById("user-list");
+    tbody.innerHTML = "";
 
-    students.forEach((user, index) => {
+    try {
+        const res = await fetch("http://localhost:8080/api/admin/students");
+        const students = await res.json();
 
-        const div = document.createElement("div");
-        div.className = "user-card";
+        students.forEach(student => {
 
-        div.innerHTML = `
-            <h4>${user.username}</h4>
-            <p>Exams Taken: ${user.examsTaken}</p>
-            <p>Average Score: ${user.avgScore}</p>
-            <button onclick="viewUser(${index})">View Details</button>
-        `;
+            const row = document.createElement("tr");
 
-        container.appendChild(div);
-    });
+            row.innerHTML = `
+                <td>${student.name}</td>
+                <td>${student.attempts}</td>
+                <td>${student.results}</td>
+                <td>
+                    <button onclick="viewStudent(${student.id})">
+                        View
+                    </button>
+                </td>
+            `;
+
+            tbody.appendChild(row);
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
 }
 
-function viewUser(index){
-
-    localStorage.setItem("selectedUser", JSON.stringify(students[index]));
-
-    window.location.href = "user-detail.html";
+function viewUsers(id) {
+    localStorage.setItem("viewStudentId", id);
+    window.location.href = "user-details.html";
 }
 
-function loadUserDetail(){
+async function loadUserDetail() {
 
-    const data = localStorage.getItem("selectedUser");
-    if (!data) {
-        window.location.href = "view-users.html";
-        return;
+    const id = localStorage.getItem("viewStudentId");
+
+    try {
+        const res = await fetch(
+            `http://localhost:8080/api/admin/students/${id}`
+        );
+
+        const data = await res.json();
+
+        // 👤 Profile
+        document.getElementById("user-name").innerText = data.username;
+
+        // 📊 History
+        const container = document.getElementById("student-history");
+        container.innerHTML = "";
+
+        data.results.forEach(r => {
+            const div = document.createElement("div");
+
+            div.innerHTML = `
+                <p>${r.title} - ${r.score}</p>
+                <p>${r.date}</p>
+                <hr>
+            `;
+
+            container.appendChild(div);
+        });
+
+    } catch (err) {
+        console.error(err);
     }
-
-    const user = JSON.parse(data);
-
-    document.getElementById("user-name").innerText = user.username;
-
-    document.getElementById("user-stats").innerHTML = `
-        <p><strong>Exams Taken:</strong> ${user.examsTaken}</p>
-        <p><strong>Average Score:</strong> ${user.avgScore}</p>
-    `;
-
-    const historyDiv = document.getElementById("user-history");
-    historyDiv.innerHTML = "";
-
-    user.history.forEach(item => {
-
-        const div = document.createElement("div");
-
-        div.innerHTML = `
-            <p><strong>${item.exam}</strong> - ${item.score}</p>
-        `;
-
-        historyDiv.appendChild(div);
-    });
-}
-
-function initExamPage(){
-
-    const examData = localStorage.getItem("currentExam");
-    if (!examData) {
-        window.location.href = "user-dashboard.html";
-        return;
-    }
-
-    currentExam = JSON.parse(examData);
-
-    const savedAnswers = localStorage.getItem("userAnswers");
-    if (savedAnswers) {
-        userAnswers = JSON.parse(savedAnswers);
-        currentQuestionIndex = userAnswers.length;
-    }
-
-    document.getElementById("exam-title").innerText = currentExam.title;
-
-    startTimer(currentExam.duration);
-    loadQuestion();
 }
 
 function initResultPage(){
@@ -606,6 +781,8 @@ function initResultPage(){
 
     const result = JSON.parse(resultData);
 
+    console.log(result);
+
     document.getElementById("result-title").innerText = result.examTitle;
 
     document.getElementById("score-text").innerText =
@@ -614,55 +791,4 @@ function initResultPage(){
     generateReview(result);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
 
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-
-    // 🔐 Protect pages (except login)
-    if (!user && !document.getElementById("auth-button")) {
-        window.location.href = "index.html";
-        return;
-    }
-
-    // 👋 Welcome text
-    const welcomeText = document.getElementById("welcome-text");
-    if (welcomeText && user) {
-        welcomeText.innerText = "Welcome, " + user.username + "!";
-    }
-
-    // 📊 USER DASHBOARD
-    if (document.getElementById("exam-list")) {
-        loadExams();
-    }
-
-    // 📝 EXAM PAGE
-    if (document.getElementById("question-text")) {
-        initExamPage();
-    }
-
-    // 📊 RESULT PAGE
-    if (document.getElementById("result-title")) {
-        initResultPage();
-    }
-
-    // 👨‍💼 ADMIN DASHBOARD
-    if (document.getElementById("student-table-body")) {
-        loadStudents();
-    }
-
-    // 🛠 MANAGE EXAMS
-    if (document.getElementById("admin-exam-list")) {
-        loadAdminExams();
-    }
-
-    // 👥 VIEW USERS
-    if (document.getElementById("user-list")) {
-        loadUsers();
-    }
-
-    // 👤 USER DETAIL
-    if (document.getElementById("user-name")) {
-        loadUserDetail();
-    }
-
-});
